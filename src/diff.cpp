@@ -36,13 +36,13 @@ void Diff::Set(const Diff & src) {
     _fileToSwap = src._fileToSwap;
 }
 
-bool Diff::Compare() {
+Result Diff::Compare() {
     if(_fileX == NULL || _fileY == NULL) throw "Files to compare have not been specified.";
     
     _fileX->LoadFileData();
     _fileY->LoadFileData();
 
-    return _fileX->CompareWith(_fileY);
+    return Result(_fileX->CompareWith(_fileY));
 }
 
 std::ostream & Diff::Print(std::ostream & os) const {

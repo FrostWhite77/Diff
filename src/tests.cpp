@@ -32,7 +32,7 @@ BinFile * bf2 = new BinFile("data/list.txt");
 
 Diff * d = new Diff(bf1, bf2);
 cout << *d << endl;
-cout << boolalpha << "are equal: " << d->Compare() << endl;
+cout << boolalpha << "are equal: " << d->Compare().GetResult() << endl;
 
 delete d;
 

@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "file.hpp"
+#include "result.hpp"
 
 class Diff {
     public:
@@ -14,7 +15,7 @@ class Diff {
         Diff * Clone() const;
         void Set(const Diff & src);
 
-        bool Compare();
+        Result Compare();
         void SetFile(const std::string & filePath);
 
         std::ostream & Print(std::ostream & os) const;
