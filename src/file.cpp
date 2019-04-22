@@ -32,9 +32,10 @@ bool File::LoadFileData() {
 }
 
 Result File::CompareWith(File * f, bool showDifferences) {
-    Result diffResult(_fileName, f->_fileName, true); 
+    std::vector<uint8_t> bx, by;
+
     std::cout << "compare function called" << std::endl;
-    return diffResult;
+    return Result(_fileName, f->_fileName, bx, by, false);
 }
 
 std::ostream & File::PrintFileInfo(std::ostream & os) const {
@@ -105,28 +106,26 @@ bool BinFile::LoadFileData() {
 
 Result BinFile::CompareWith(File * f, bool showDifferences) {
     BinFile * bf = dynamic_cast<BinFile *>(f);
-    
-    if(showDifferences && _bytes.size() != bf->_bytes.size()) return Result(_fileName, bf->_fileName);
+    std::vector<uint8_t> bx, by;
 
-    Result _result(_fileName, bf->_fileName);
+    if(showDifferences && _bytes.size() != bf->_bytes.size()) return Result(_fileName, bf->_fileName, bx, by);
+
     size_t x = 0, y = 0;
-
     while(x < _bytes.size() && y < bf->_bytes.size())
     {
         if(_bytes[x] != bf->_bytes[y])
         {
-            _result.AddToXBytes(_bytes[x]);
-            _result.AddToYBytes(bf->_bytes[x]);
+           bx.push_back(_bytes[x]);
+           by.push_back(bf->_bytes[x]);
         }
         
         x++; y++;
     }
 
-    while(x < _bytes.size()) { _result.AddToXBytes(_bytes[x]); x++; }
-    while(y < bf->_bytes.size()) { _result.AddToYBytes(bf->_bytes[y]); y++; }
+    while(x < _bytes.size()) { bx.push_back(_bytes[x]); x++; }
+    while(y < bf->_bytes.size()) { by.push_back(bf->_bytes[y]); y++; }
     
-    _result.SetResult(_result.GetXBytesSize() == 0 && _result.GetYBytesSize() == 0);
-    return _result;
+    return Result(_fileName, bf->_fileName, bx, by, bx.size() == 0 && by.size() == 0);
 }
 
 std::ostream & BinFile::PrintFileInfo(std::ostream & os) const {

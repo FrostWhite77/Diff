@@ -1,8 +1,8 @@
 #include "result.hpp"
 
-Result::Result(const std::string & fileNameX, const std::string & fileNameY, bool comparationResult)
+Result::Result(const std::string & fileNameX, const std::string & fileNameY, const std::vector<uint8_t> & bx, const std::vector<uint8_t> & by, bool comparationResult)
                 : _fileNameX(fileNameX), _fileNameY(fileNameY),
-                  _comparationResult(comparationResult), _fileXBytes(), _fileYBytes() {
+                  _comparationResult(comparationResult), _fileXBytes(bx), _fileYBytes(by) {
     
 }
 
@@ -30,10 +30,6 @@ void Result::Set(const Result & src) {
 
 bool Result::GetResult() const {
     return _comparationResult;
-}
-
-void Result::SetResult(bool result) {
-    _comparationResult = result;
 }
 
 void Result::AddToXBytes(uint8_t byte) {

@@ -3,7 +3,7 @@
 
 class Result {
     public:
-        Result(const std::string & fileNameX, const std::string & fileNameY, bool comparationResult = false);
+        Result(const std::string & fileNameX, const std::string & fileNameY, const std::vector<uint8_t> & bx, const std::vector<uint8_t> & by, bool comparationResult = false);
         Result(const Result & src);
         ~Result();
 
@@ -11,7 +11,6 @@ class Result {
         void Set(const Result & src);
 
         bool GetResult() const;
-        void SetResult(bool result);
 
         void AddToXBytes(uint8_t byte);
         void AddToYBytes(uint8_t byte);
