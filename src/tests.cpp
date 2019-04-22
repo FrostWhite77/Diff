@@ -32,10 +32,12 @@ BinFile * bf2 = new BinFile("data/list.txt");
 
 Diff * d = new Diff(bf1, bf2);
 cout << *d << endl;
-cout << boolalpha << "are equal: " << d->Compare().GetResult() << endl;
+Result res = d->Compare();
+res.Print(cout);
 
 delete d;
 
+/*
 try
 {
     d = new Diff();
@@ -46,3 +48,4 @@ catch(const char * e)
 {
     std::cerr << e << '\n';
 }
+*/

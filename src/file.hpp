@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "result.hpp"
+
 class AbstractFile {
     public:
         virtual AbstractFile * Clone() const = 0;
@@ -23,7 +25,7 @@ class File : public AbstractFile {
 
         bool IsLoaded() const;
         virtual bool LoadFileData();
-        virtual bool CompareWith(File * f);
+        virtual Result CompareWith(File * f, bool showDifferences = false);
 
         virtual std::ostream & PrintFileInfo(std::ostream & os) const override;
         virtual std::ostream & PrintFileContent(std::ostream & os) const override;
@@ -46,7 +48,7 @@ class BinFile : public File {
         virtual void Set(const BinFile & src);
 
         virtual bool LoadFileData() override;
-        virtual bool CompareWith(File * f) override;
+        virtual Result CompareWith(File * f, bool showDifferences = false) override;
 
         virtual std::ostream & PrintFileInfo(std::ostream & os) const override;
         virtual std::ostream & PrintFileContent(std::ostream & os) const override;

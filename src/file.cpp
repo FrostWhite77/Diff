@@ -31,9 +31,10 @@ bool File::LoadFileData() {
     return true;
 }
 
-bool File::CompareWith(File * f) {
+Result File::CompareWith(File * f, bool showDifferences) {
+    Result diffResult(_fileName, f->_fileName, true); 
     std::cout << "compare function called" << std::endl;
-    return true;
+    return diffResult;
 }
 
 std::ostream & File::PrintFileInfo(std::ostream & os) const {
@@ -102,15 +103,30 @@ bool BinFile::LoadFileData() {
     return true;
 }
 
-bool BinFile::CompareWith(File * f) {
+Result BinFile::CompareWith(File * f, bool showDifferences) {
     BinFile * bf = dynamic_cast<BinFile *>(f);
     
-    if(_bytes.size() != bf->_bytes.size()) return false;
+    if(showDifferences && _bytes.size() != bf->_bytes.size()) return Result(_fileName, bf->_fileName);
 
-    for(size_t i = 0; i < _bytes.size(); i++)
-        if(_bytes[i] != bf->_bytes[i]) return false;
+    Result _result(_fileName, bf->_fileName);
+    size_t x = 0, y = 0;
+
+    while(x < _bytes.size() && y < bf->_bytes.size())
+    {
+        if(_bytes[x] != bf->_bytes[y])
+        {
+            _result.AddToXBytes(_bytes[x]);
+            _result.AddToYBytes(bf->_bytes[x]);
+        }
+        
+        x++; y++;
+    }
+
+    while(x < _bytes.size()) { _result.AddToXBytes(_bytes[x]); x++; }
+    while(y < bf->_bytes.size()) { _result.AddToYBytes(bf->_bytes[y]); y++; }
     
-    return true;
+    _result.SetResult(_result.GetXBytesSize() == 0 && _result.GetYBytesSize() == 0);
+    return _result;
 }
 
 std::ostream & BinFile::PrintFileInfo(std::ostream & os) const {

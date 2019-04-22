@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "file.hpp"
-#include "result.hpp"
+//#include "result.hpp"
 
 class Diff {
     public:
