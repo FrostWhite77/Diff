@@ -54,12 +54,17 @@ std::ostream & Result::Print(std::ostream & os) {
     os << "Files " << _fileNameX << " and " << _fileNameY << " are" << (_comparationResult ? "" : " not") << " equal." << std::endl;
     if(_comparationResult) return os;
 
-    os << "Bytes in " << _fileNameX << " but not in " << _fileNameY << ": ";
-    for(size_t i = 0; i < _fileXBytes.size(); i++) if(i == 0) os << _fileXBytes[i]; else os << ", " << _fileXBytes[i];
-    os << std::endl;
-    os << "Bytes in " << _fileNameY << " but not in " << _fileNameX << ": ";
-    for(size_t i = 0; i < _fileYBytes.size(); i++) if(i == 0) os << _fileYBytes[i]; else os << ", " << _fileYBytes[i];
-    os << std::endl;
+    PrintDiffer(os, _fileNameX, _fileNameY, _fileXBytes);
+    PrintDiffer(os, _fileNameY, _fileNameX, _fileYBytes);
 
     return os;
+}
+
+std::ostream & Result::PrintDiffer(std::ostream & os, const std::string & first, const std::string & second, const std::vector<uint8_t> & differs) {
+    if(differs.size() == 0) return os;
+
+    os << "Bytes in " << first << " but not in " << second << ": ";
+    for(size_t i = 0; i < differs.size(); i++) os << differs[i];
+
+    return os << std::endl;
 }

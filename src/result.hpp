@@ -19,7 +19,8 @@ class Result {
         size_t GetYBytesSize() const;
 
         std::ostream & Print(std::ostream & os);
-    
+        std::ostream & PrintDiffer(std::ostream & os, const std::string & first, const std::string & second, const std::vector<uint8_t> & differs);
+
     private:
         std::string _fileNameX;
         std::string _fileNameY;
