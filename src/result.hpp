@@ -1,10 +1,11 @@
 #include <sstream>
 #include <vector>
 
+template<class T>
 class Result {
     public:
-        Result(const std::string & fileNameX, const std::string & fileNameY, const std::vector<uint8_t> & bx, const std::vector<uint8_t> & by, bool comparationResult = false);
-        Result(const Result & src);
+        Result(const std::string & fileNameX, const std::string & fileNameY, const std::vector<T> & bx, const std::vector<T> & by, bool comparationResult = false);
+        Result(const Result<T> & src);
         ~Result();
 
         Result * Clone() const;
@@ -12,8 +13,8 @@ class Result {
 
         bool GetResult() const;
 
-        void AddToXBytes(uint8_t byte);
-        void AddToYBytes(uint8_t byte);
+        void AddToXBytes(T byte);
+        void AddToYBytes(T byte);
 
         size_t GetXBytesSize() const;
         size_t GetYBytesSize() const;
@@ -26,8 +27,8 @@ class Result {
 
         bool _comparationResult;
 
-        std::vector<uint8_t> _fileXBytes;
-        std::vector<uint8_t> _fileYBytes;
+        std::vector<T> _fileXBytes;
+        std::vector<T> _fileYBytes;
 
-        std::ostream & PrintDiffer(std::ostream & os, const std::string & first, const std::string & second, const std::vector<uint8_t> & differs);
+        std::ostream & PrintDiffer(std::ostream & os, const std::string & first, const std::string & second, const std::vector<T> & differs);
 };

@@ -14,31 +14,33 @@ class AbstractFile {
         virtual std::ostream & PrintFileContent(std::ostream & os) const = 0; 
 };
 
+template<class T>
 class File : public AbstractFile {
     public:
         File(std::string fileName);
         File(const File & src);
         virtual ~File();
 
-        virtual File * Clone() const;
+        virtual File<T> * Clone() const;
         virtual void Set(const File & src);
 
         bool IsLoaded() const;
         virtual bool LoadFileData();
-        virtual Result CompareWith(File * f, bool showDifferences = false);
+        virtual Result<T> CompareWith(File<T> * f, bool showDifferences = false);
 
         virtual std::ostream & PrintFileInfo(std::ostream & os) const override;
         virtual std::ostream & PrintFileContent(std::ostream & os) const override;
 
-        friend std::ostream & operator<<(std::ostream & os, const File & f);
-        File & operator=(const File & src);
+        template <class X>
+        friend std::ostream & operator<<(std::ostream & os, const File<X> & f);
+        File<T> & operator=(const File<T> & src);
 
     protected:
         std::string _fileName;
         bool _hasBeenLoaded;
 };
 
-class BinFile : public File {
+class BinFile : public File<uint8_t> {
     public:
         BinFile(std::string fileName);
         BinFile(const BinFile & src);
@@ -48,7 +50,7 @@ class BinFile : public File {
         virtual void Set(const BinFile & src);
 
         virtual bool LoadFileData() override;
-        virtual Result CompareWith(File * f, bool showDifferences = false) override;
+        virtual Result<uint8_t> CompareWith(File * f, bool showDifferences = false);
 
         virtual std::ostream & PrintFileInfo(std::ostream & os) const override;
         virtual std::ostream & PrintFileContent(std::ostream & os) const override;
@@ -58,4 +60,26 @@ class BinFile : public File {
 
     private:
         std::vector<uint8_t> _bytes;
+};
+
+class TxtFile : public File<char> {
+    public:
+        TxtFile(std::string fileName);
+        TxtFile(const TxtFile & src);
+        virtual ~TxtFile();
+
+        virtual TxtFile * Clone() const override;
+        virtual void Set(const TxtFile & src);
+
+        virtual bool LoadFileData() override;
+        virtual Result<char> CompareWith(File * f, bool showDifferences = false);
+
+        virtual std::ostream & PrintFileInfo(std::ostream & os) const override;
+        virtual std::ostream & PrintFileContent(std::ostream & os) const override;
+
+        friend std::ostream & operator<<(std::ostream & os, const TxtFile & f);
+        TxtFile & operator=(const TxtFile & src);
+
+    private:
+        std::vector<char> _chars;
 };

@@ -7,15 +7,15 @@
 class Diff {
     public:
         Diff();
-        Diff(const File & x, const File & y);
-        Diff(const File * x, const File * y);
+        Diff(const BinFile & x, const BinFile & y);
+        Diff(const BinFile * x, const BinFile* y);
         Diff(const Diff & src);
         ~Diff();
 
         Diff * Clone() const;
         void Set(const Diff & src);
 
-        Result Compare();
+        Result<uint8_t> Compare();
         void SetFile(const std::string & filePath);
 
         std::ostream & Print(std::ostream & os) const;
@@ -28,6 +28,6 @@ class Diff {
     private:
         int _fileToSwap;
 
-        File * _fileX = NULL;
-        File * _fileY = NULL;
+        BinFile * _fileX = NULL;
+        BinFile * _fileY = NULL;
 };

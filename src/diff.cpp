@@ -4,11 +4,11 @@ Diff::Diff() : _fileToSwap(0), _fileX(NULL), _fileY(NULL) {
 
 }
 
-Diff::Diff(const File & x, const File & y) : _fileToSwap(0), _fileX(x.Clone()), _fileY(y.Clone()) {
+Diff::Diff(const BinFile & x, const BinFile & y) : _fileToSwap(0), _fileX(x.Clone()), _fileY(y.Clone()) {
 
 }
 
-Diff::Diff(const File * x, const File * y) : _fileToSwap(0), _fileX(x->Clone()), _fileY(y->Clone()) {
+Diff::Diff(const BinFile * x, const BinFile * y) : _fileToSwap(0), _fileX(x->Clone()), _fileY(y->Clone()) {
 
 }
 
@@ -36,13 +36,13 @@ void Diff::Set(const Diff & src) {
     _fileToSwap = src._fileToSwap;
 }
 
-Result Diff::Compare() {
+Result<uint8_t> Diff::Compare() {
     if(_fileX == NULL || _fileY == NULL) throw "Files to compare have not been specified.";
     
     _fileX->LoadFileData();
     _fileY->LoadFileData();
 
-    return Result(_fileX->CompareWith(_fileY));
+    return _fileX->CompareWith(_fileY);
 }
 
 std::ostream & Diff::Print(std::ostream & os) const {

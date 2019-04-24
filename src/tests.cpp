@@ -32,7 +32,7 @@ BinFile * bf2 = new BinFile("data/list.txt");
 
 Diff * d = new Diff(bf1, bf2);
 cout << *d << endl;
-Result res = d->Compare();
+Result<uint8_t> res = d->Compare();
 res.Print(cout);
 
 delete d;
