@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-     
+
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
     cout << bd << endl;
     cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
@@ -23,6 +23,12 @@ int main() {
     BinDiff bd2(TxtFile("data/file1.txt"), BinFile("data/file2.bin"));
     cout << bd2 << endl;
     cout << "Are files equal: " << boolalpha << bd2.Compare() << endl;
+
+    cout << endl;
+
+    TxtDiff tb2(TxtFile("data/file1.txt"), BinFile("data/file2.bin"));
+    cout << tb2 << endl;
+    cout << "Are files equal: " << boolalpha << tb2.Compare() << endl;
 
     return 0;
 }

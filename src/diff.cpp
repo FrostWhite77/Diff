@@ -64,6 +64,7 @@ bool BinDiff::Compare() {
 
     if(bytesX.size() != bytesY.size()) return false;
     for(size_t i = 0; i < bytesX.size(); i++) {
+        std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
         if(bytesX[i] != bytesY[i]) return false;
     }
 
@@ -97,6 +98,7 @@ bool TxtDiff::Compare() {
 
     if(charsX.size() != charsY.size()) return false;
     for(size_t i = 0; i < charsX.size(); i++) {
+        std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
         if(charsX[i] != charsY[i]) return false;
     }
 
@@ -130,8 +132,8 @@ bool JsnDiff::Compare() {
 
 std::ostream & operator<<(std::ostream & os, const JsnDiff & src) {
     os << "--JSON Diff--" << std::endl;
-    os << "File 1: " << src._first << std::endl;
-    os << "File 2: " << src._second;
+    os << "File 1: " << *src._first << std::endl;
+    os << "File 2: " << *src._second;
 
     return os;
 }
