@@ -3,26 +3,28 @@
 #include "file.hpp"
 
 #include <sstream>
+#include <iostream>
+
 
 class Diff {
     public:
-        Diff(std::string firstFile, std::string secondFile);
+        Diff(const File & firstFile, const File & secondFile);
         Diff(const Diff & src);
         virtual ~Diff();
         
-        virtual bool Compare();
+        virtual bool Compare() = 0;
 
         Diff & operator=(const Diff & src);
         friend std::ostream & operator<<(std::ostream & os, const Diff & src);
 
     protected:
-        File _first;
-        File _second;
+        File * _first;
+        File * _second;
 };
 
 class BinDiff : public Diff {
     public:
-        BinDiff(std::string firstFile, std::string secondFile);
+        BinDiff(const File & firstFile, const File & secondFile);
         BinDiff(const BinDiff & src);
         virtual ~BinDiff();
         
@@ -33,7 +35,7 @@ class BinDiff : public Diff {
 
 class TxtDiff : public Diff {
     public:
-        TxtDiff(std::string firstFile, std::string secondFile);
+        TxtDiff(const File & firstFile, const File & secondFile);
         TxtDiff(const TxtDiff & src);
         virtual ~TxtDiff();
         
@@ -44,7 +46,7 @@ class TxtDiff : public Diff {
 
 class JsnDiff : public Diff {
     public:
-        JsnDiff(std::string firstFile, std::string secondFile);
+        JsnDiff(const File & firstFile, const File & secondFile);
         JsnDiff(const JsnDiff & src);
         virtual ~JsnDiff();
         
