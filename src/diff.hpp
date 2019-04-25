@@ -3,8 +3,6 @@
 #include "file.hpp"
 
 #include <sstream>
-#include <iostream>
-
 
 class Diff {
     public:
@@ -12,6 +10,8 @@ class Diff {
         Diff(const Diff & src);
         virtual ~Diff();
         
+        void SetFirst(const File & file);
+        void SetSecond(const File & file);
         virtual bool Compare() = 0;
 
         Diff & operator=(const Diff & src);

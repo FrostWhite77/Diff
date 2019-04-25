@@ -20,15 +20,18 @@ int main() {
     
     cout << endl;
 
-    BinDiff bd2(TxtFile("data/file1.txt"), BinFile("data/file2.bin"));
-    cout << bd2 << endl;
-    cout << "Are files equal: " << boolalpha << bd2.Compare() << endl;
+    bd.SetFirst(TxtFile("data/file1.txt"));
+    bd.SetSecond(BinFile("data/file2.bin"));
+
+    cout << bd << endl;
+    //cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
 
     cout << endl;
 
-    TxtDiff tb2(TxtFile("data/file1.txt"), BinFile("data/file2.bin"));
-    cout << tb2 << endl;
-    cout << "Are files equal: " << boolalpha << tb2.Compare() << endl;
+    td.SetSecond(BinFile("data/file2.bin"));
+
+    cout << td << endl;
+    //cout << "Are files equal: " << boolalpha << td.Compare() << endl;
 
     return 0;
 }

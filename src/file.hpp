@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sstream>
-#include <iostream>
 #include <fstream>
 #include <vector>
 
@@ -43,7 +42,7 @@ class BinFile : public File {
         virtual std::vector<char> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
-        virtual std::ostream & Print(std::ostream & os) const;
+        virtual std::ostream & Print(std::ostream & os) const override;
         friend std::ostream & operator<<(std::ostream & os, const BinFile & src);
     
     private:
@@ -65,7 +64,7 @@ class TxtFile : public File {
         virtual std::vector<char> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
-        virtual std::ostream & Print(std::ostream & os) const;
+        virtual std::ostream & Print(std::ostream & os) const override;
         friend std::ostream & operator<<(std::ostream & os, const TxtFile & src);
     
     private:
@@ -87,7 +86,7 @@ class JsnFile : public File {
         virtual std::vector<char> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
-        virtual std::ostream & Print(std::ostream & os) const;
+        virtual std::ostream & Print(std::ostream & os) const override;
         friend std::ostream & operator<<(std::ostream & os, const JsnFile & src);
     
     private:

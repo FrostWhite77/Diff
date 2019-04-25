@@ -21,6 +21,17 @@ Diff::~Diff() {
     if(_second != NULL) delete _second;
 }
 
+void Diff::SetFirst(const File & file) {
+    if(_first != NULL) delete _first;
+    _first = file.Clone();
+}
+
+void Diff::SetSecond(const File & file) {
+    if(_second != NULL) delete _second;
+    _second = file.Clone(); 
+}
+        
+
 bool Diff::Compare() {
     return true;
 }
@@ -64,7 +75,7 @@ bool BinDiff::Compare() {
 
     if(bytesX.size() != bytesY.size()) return false;
     for(size_t i = 0; i < bytesX.size(); i++) {
-        std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
+        //std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
         if(bytesX[i] != bytesY[i]) return false;
     }
 
@@ -98,7 +109,7 @@ bool TxtDiff::Compare() {
 
     if(charsX.size() != charsY.size()) return false;
     for(size_t i = 0; i < charsX.size(); i++) {
-        std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
+        //std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
         if(charsX[i] != charsY[i]) return false;
     }
 
