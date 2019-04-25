@@ -1,87 +1,11 @@
 #include "file.hpp"
 
-// File
-template<class T>
-File<T>::File(std::string fileName) : _fileName(fileName), _hasBeenLoaded(false) {
-
-}
-
-template<class T>
-File<T>::File(const File & src) {
-    if(&src == this) return;
-    Set(src);
-}
-
-template<class T>
-File<T>::~File() {
-
-}
-
-template<class T>
-File<T> * File<T>::Clone() const {
-    return new File<T>(*this);
-}
-
-template<class T>
-void File<T>::Set(const File<T> & src) {
-    _fileName = src._fileName;
-    _hasBeenLoaded = src._hasBeenLoaded;
-}
-
-template<class T>
-bool File<T>::IsLoaded() const {
-    return _hasBeenLoaded;
-}
-
-template<class T>
-bool File<T>::LoadFileData() {
-    std::cout << "File<T>::LoadFileContent()" << std::endl;
-    return true;
-}
-
-/*
-template<class T>
-Result<T> File<T>::CompareWith(File * f, bool showDifferences) {
-    std::vector<T> bx, by;
-
-    std::cout << "compare function called" << std::endl;
-    return Result<T>(_fileName, f->_fileName, bx, by, false);
-}
-*/
-
-template<class T>
-std::ostream & File<T>::PrintFileInfo(std::ostream & os) const {
-    os << "Unspecified File: " << _fileName; 
-    return os;
-}
-
-template<class T>
-std::ostream & File<T>::PrintFileContent(std::ostream & os) const {
-    os << "Content: " << "WILL BE ADDED LATER";
-    return os;
-}
-
-template<class T>
-std::ostream & operator<<(std::ostream & os, const File<T> & f) {
-    f.PrintFileInfo(os) << "\n";
-    f.PrintFileContent(os);
-    return os;
-}
-
-template<class T>
-File<T> & File<T>::operator=(const File<T> & src) {
-    if(&src == this) return *this;
-    Set(src);
-    
-    return *this;
-}
-
 // BinFile
-BinFile::BinFile(std::string fileName) : File(fileName) {
+BinFile::BinFile(std::string fileName) : File<uint8_t>(fileName) {
     
 }
 
-BinFile::BinFile(const BinFile & src) : File(src) {
+BinFile::BinFile(const BinFile & src) : File<uint8_t>(src) {
     if(&src == this) return;
 
     _bytes = src._bytes;
@@ -163,17 +87,18 @@ std::ostream & operator<<(std::ostream & os, const BinFile & f) {
 BinFile & BinFile::operator=(const BinFile & src) {
     if(&src == this) return *this;
     Set(src);
-    File::operator=(src);
+    File<uint8_t>::operator=(src);
 
     return *this;
 }
 
+/*
 // TxtFile
-TxtFile::TxtFile(std::string fileName) : File(fileName) {
+TxtFile::TxtFile(std::string fileName) : File<char>(fileName) {
 
 }
 
-TxtFile::TxtFile(const TxtFile & src) : File(src) {
+TxtFile::TxtFile(const TxtFile & src) : File<char>(src) {
     if(&src == this) return;
     Set(src);
 }
@@ -254,7 +179,8 @@ std::ostream & operator<<(std::ostream & os, const TxtFile & f) {
 TxtFile & TxtFile::operator=(const TxtFile & src) {
     if(&src == this) return *this;
     Set(src);
-    File::operator=(src);
+    File<char>::operator=(src);
 
     return *this;
 }
+*/

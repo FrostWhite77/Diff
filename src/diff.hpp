@@ -1,8 +1,9 @@
+#pragma once
+
 #include <sstream>
 #include <iostream>
 
 #include "file.hpp"
-//#include "result.hpp"
 
 class Diff {
     public:
