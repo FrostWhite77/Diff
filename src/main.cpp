@@ -6,7 +6,8 @@
 
 using namespace std;
 
-int main() { 
+int main() {
+     
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
     cout << bd << endl;
     cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
