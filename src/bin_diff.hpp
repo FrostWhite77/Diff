@@ -1,5 +1,7 @@
 #pragma once
 
+#include "file.hpp"
+
 #include <sstream>
 
 class BinDiff {
@@ -13,6 +15,6 @@ class BinDiff {
         friend std::ostream & operator<<(std::ostream & os, const BinDiff & src);
 
     private:
-        std::string _first;
-        std::string _second;
+        File _first;
+        File _second;
 };

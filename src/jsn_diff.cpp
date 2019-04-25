@@ -4,11 +4,8 @@ JsnDiff::JsnDiff(std::string firstFile, std::string secondFile) : _first(firstFi
 
 }
 
-JsnDiff::JsnDiff(const JsnDiff & src) {
-    if(&src == this);
-
-    _first = src._first;
-    _second = src._second;
+JsnDiff::JsnDiff(const JsnDiff & src) : _first(src._first), _second(src._second) {
+    if(&src == this) return;
 }
 
 JsnDiff::~JsnDiff() {

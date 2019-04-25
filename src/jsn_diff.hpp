@@ -1,5 +1,7 @@
 #pragma once
 
+#include "file.hpp"
+
 #include <sstream>
 
 class JsnDiff {
@@ -13,6 +15,6 @@ class JsnDiff {
         friend std::ostream & operator<<(std::ostream & os, const JsnDiff & src);
 
     private:
-        std::string _first;
-        std::string _second;
+        File _first;
+        File _second;
 };

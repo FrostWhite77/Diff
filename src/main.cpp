@@ -2,9 +2,7 @@
 #include <sstream>
 #include <cassert>
 
-#include "bin_diff.hpp"
-#include "txt_diff.hpp"
-#include "jsn_diff.hpp"
+#include "diff.hpp"
 
 using namespace std;
 

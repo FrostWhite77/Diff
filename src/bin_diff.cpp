@@ -4,11 +4,8 @@ BinDiff::BinDiff(std::string firstFile, std::string secondFile) : _first(firstFi
 
 }
 
-BinDiff::BinDiff(const BinDiff & src) {
+BinDiff::BinDiff(const BinDiff & src) : _first(src._first), _second(src._second) {
     if(&src == this);
-
-    _first = src._first;
-    _second = src._second;
 }
 
 BinDiff::~BinDiff() {

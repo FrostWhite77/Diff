@@ -4,11 +4,8 @@ TxtDiff::TxtDiff(std::string firstFile, std::string secondFile) : _first(firstFi
 
 }
 
-TxtDiff::TxtDiff(const TxtDiff & src) {
+TxtDiff::TxtDiff(const TxtDiff & src) :_first(src._first), _second(src._second) {
     if(&src == this);
-
-    _first = src._first;
-    _second = src._second;
 }
 
 TxtDiff::~TxtDiff() {

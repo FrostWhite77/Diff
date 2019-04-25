@@ -6,14 +6,11 @@ SRC=./src/
 
 all: diff
 
-diff: $(SRC)main.cpp $(BLD)bin_diff.o $(BLD)txt_diff.o $(BLD)jsn_diff.o
-	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)bin_diff.o $(BLD)txt_diff.o $(BLD)jsn_diff.o
+diff: $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o
+	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o
 
-$(BLD)bin_diff.o: $(SRC)bin_diff.cpp $(SRC)bin_diff.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)bin_diff.o $(SRC)bin_diff.cpp
+$(BLD)diff.o: $(SRC)diff.cpp $(SRC)diff.hpp $(BLD)file.o
+	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)diff.o $(SRC)diff.cpp
 
-$(BLD)txt_diff.o: $(SRC)txt_diff.cpp $(SRC)txt_diff.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)txt_diff.o $(SRC)txt_diff.cpp
-
-$(BLD)jsn_diff.o: $(SRC)jsn_diff.cpp $(SRC)jsn_diff.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)jsn_diff.o $(SRC)jsn_diff.cpp
+$(BLD)file.o: $(SRC)file.cpp $(SRC)file.hpp 
+	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)file.o $(SRC)file.cpp
