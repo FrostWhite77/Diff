@@ -2,21 +2,25 @@
 #include <sstream>
 #include <cassert>
 
-#include "diff.hpp"
+#include "bin_diff.hpp"
+#include "txt_diff.hpp"
+#include "jsn_diff.hpp"
 
 using namespace std;
 
 int main() { 
-    //#include "tests.cpp"
-    
-    BinFile * bf1 = new BinFile("data/file.txt");
-    BinFile * bf2 = new BinFile("data/list.txt");
-    
-    Diff * d = new Diff(bf1, bf2);
-    std::cout << *d << endl;
-    d->Compare().Print(std::cout);
-    
-    delete d;
+    BinDiff bd("data/file.bin", "data/file.bin");
+    cout << bd << endl;
+
+    cout << endl;
+
+    TxtDiff td("data/file.txt", "data/file.txt");
+    cout << td << endl;
+
+    cout << endl;
+
+    JsnDiff jd("data/file.txt", "data/file.txt");
+    cout << jd << endl;
     
     return 0;
 }
