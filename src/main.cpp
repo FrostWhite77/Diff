@@ -23,10 +23,5 @@ int main() {
     cout << bd2 << endl;
     cout << "Are files equal: " << boolalpha << bd2.Compare() << endl;
 
-    /*
-    JsnDiff jd("data/file.txt", "data/file.txt");
-    cout << jd << endl;
-    */
-    
     return 0;
 }
