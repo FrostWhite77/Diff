@@ -110,9 +110,7 @@ TxtDiff::~TxtDiff() {
 bool TxtDiff::Compare() {
     std::vector<char> charsX = _first->GetText();
     std::vector<char> charsY = _second->GetText();
-
-    std::cout << charsX.size() << " ?? " << charsY.size() << std::endl;
-
+    
     if(charsX.size() != charsY.size()) return false;
     for(size_t i = 0; i < charsX.size(); i++) {
         //std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;

@@ -73,8 +73,8 @@ size_t BinFile::GetFileSize() const {
 }
 
 bool BinFile::Load() {
-    if(_isLoaded == false) return true;
-    
+    if(_isLoaded) return true;  
+
     std::ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 

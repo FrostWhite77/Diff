@@ -33,5 +33,13 @@ int main() {
     cout << td << endl;
     cout << "Are files equal: " << boolalpha << td.Compare() << endl;
 
+    cout << endl;
+
+    td.SetFirst(BinFile("data/file2.bin"));
+    td.SetSecond(TxtFile("data/file2.txt"));
+
+    cout << td << endl;
+    cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+
     return 0;
 }
