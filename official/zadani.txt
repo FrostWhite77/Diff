@@ -1,0 +1,15 @@
+Tento program bude umet porovnavat soubory 3 druhu - binarni, textovy a JSON. Krome porovnavani souboru stejnych druhu
+pujde porovnavat take soubory ruznych druhu mezi sebou.
+
+U textovych souboru bude mozne porovnavat case a incase sensitive.
+U binarnich souboru pujde porovnavat tak, ze zalezi/nezalezi na poradi. 
+U souboru typu JSON bude program umet rozpoznat, zda je takovyto soubor spravne naformatovan (uvozovky, zavorky, ..).
+
+Program take dokaze rozpoznat, zda je na vstupu soubor nebo slozka (podle koncovky .txt, ..)a popr. porovnavat
+cele slozky:
+	- zjisti, ktere soubory jsou/nejsou v dane slozce
+	- pokud nalezne dva soubory se stejnym jmenem (vcetne koncovky), porovna je
+
+Porovnavani souboru 2 ruznych typu se neprovadi automaticky a musi byt vynuceno parametrem.
+
+
