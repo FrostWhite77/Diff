@@ -3,11 +3,11 @@
 #include <cassert>
 
 #include "diff.hpp"
+#include "folder.hpp"
 
 using namespace std;
 
 int main() {
-
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
     cout << bd << endl;
     cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
@@ -40,6 +40,11 @@ int main() {
 
     cout << td << endl;
     cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+
+    cout << endl << "Folder Class: GetFilesInFolder() Test: " << endl;
+
+    Folder fld("./data");
+    fld.GetFilesInFolder();
 
     return 0;
 }

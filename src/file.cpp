@@ -28,6 +28,10 @@ bool File::Load() {
     return false;
 }
 
+std::string File::GetFileName() const {
+    return _fileName;
+}
+
 std::vector<uint8_t> File::GetBinary() {
     return std::vector<uint8_t>();
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "file.hpp"
+#include "result.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -13,6 +14,7 @@ class Diff {
         
         void SetFirst(const File & file);
         void SetSecond(const File & file);
+
         virtual bool Compare() = 0;
 
         Diff & operator=(const Diff & src);
@@ -29,7 +31,7 @@ class BinDiff : public Diff {
         BinDiff(const BinDiff & src);
         virtual ~BinDiff();
         
-        virtual bool Compare() override;
+        virtual bool Compare();
 
         friend std::ostream & operator<<(std::ostream & os, const BinDiff & src);
 };
@@ -40,7 +42,7 @@ class TxtDiff : public Diff {
         TxtDiff(const TxtDiff & src);
         virtual ~TxtDiff();
         
-        virtual bool Compare() override;
+        virtual bool Compare();
 
         friend std::ostream & operator<<(std::ostream & os, const TxtDiff & src);
 };

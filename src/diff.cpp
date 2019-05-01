@@ -34,11 +34,6 @@ void Diff::SetSecond(const File & file) {
 
     _second->Load();
 }
-        
-
-bool Diff::Compare() {
-    return true;
-}
 
 Diff & Diff::operator=(const Diff & src) {
     if(&src == this) return *this;
@@ -77,13 +72,13 @@ bool BinDiff::Compare() {
     std::vector<uint8_t> bytesX = _first->GetBinary();
     std::vector<uint8_t> bytesY = _second->GetBinary();
 
-    if(bytesX.size() != bytesY.size()) return false;
+    if(bytesX.size() != bytesY.size()) return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
     for(size_t i = 0; i < bytesX.size(); i++) {
         //std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
-        if(bytesX[i] != bytesY[i]) return false;
+        if(bytesX[i] != bytesY[i]) return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
     }
 
-    return true;
+    return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), true).GetResult();
 }   
 
 std::ostream & operator<<(std::ostream & os, const BinDiff & src) {
@@ -111,13 +106,13 @@ bool TxtDiff::Compare() {
     std::vector<char> charsX = _first->GetText();
     std::vector<char> charsY = _second->GetText();
     
-    if(charsX.size() != charsY.size()) return false;
+    if(charsX.size() != charsY.size()) return Result<char>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
     for(size_t i = 0; i < charsX.size(); i++) {
         //std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
-        if(charsX[i] != charsY[i]) return false;
+        if(charsX[i] != charsY[i]) return Result<char>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
     }
 
-    return true;
+    return Result<char>(_first->GetFileName(), _second->GetFileName(), true).GetResult();
 }   
 
 std::ostream & operator<<(std::ostream & os, const TxtDiff & src) {
@@ -142,7 +137,7 @@ JsnDiff::~JsnDiff() {
 }
 
 bool JsnDiff::Compare() {
-    return true;
+    return Result<std::string>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
 }   
 
 std::ostream & operator<<(std::ostream & os, const JsnDiff & src) {

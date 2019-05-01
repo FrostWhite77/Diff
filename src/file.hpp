@@ -15,6 +15,8 @@ class File {
         virtual size_t GetFileSize() const;
         virtual bool Load();
 
+        std::string GetFileName() const;
+
         virtual std::vector<uint8_t> GetBinary();
         virtual std::vector<char> GetText();
         virtual std::vector<std::string> GetJSON();
