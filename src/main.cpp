@@ -24,14 +24,14 @@ int main() {
     bd.SetSecond(BinFile("data/file2.bin"));
 
     cout << bd << endl;
-    //cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
 
     cout << endl;
 
     td.SetSecond(BinFile("data/file2.bin"));
 
     cout << td << endl;
-    //cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << td.Compare() << endl;
 
     return 0;
 }

@@ -9,6 +9,7 @@ File::File(const File & src) {
     if(&src == this) return;
 
     _fileName = src._fileName;
+    _isLoaded = src._isLoaded;
 }
 
 File::~File() {
@@ -55,6 +56,8 @@ BinFile::BinFile(std::string fileName) : File(fileName) {
 
 BinFile::BinFile(const BinFile & src) : File(src) {
     if(&src == this) return;
+
+    _bytes = src._bytes;
 }
 
 BinFile::~BinFile() {
@@ -70,6 +73,8 @@ size_t BinFile::GetFileSize() const {
 }
 
 bool BinFile::Load() {
+    if(_isLoaded == false) return true;
+    
     std::ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 
@@ -118,6 +123,8 @@ TxtFile::TxtFile(std::string fileName) : File(fileName) {
 
 TxtFile::TxtFile(const TxtFile & src) : File(src) {
     if(&src == this) return;
+
+    _chars = src._chars;
 }
 
 TxtFile::~TxtFile() {
@@ -136,7 +143,7 @@ bool TxtFile::Load() {
     std::ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 
-    uint8_t byte;
+    char byte;
     while(f.peek() != EOF) {
         f.read((char *)&byte, sizeof(byte));
         _chars.push_back(byte);
@@ -181,6 +188,8 @@ JsnFile::JsnFile(std::string fileName) : File(fileName) {
 
 JsnFile::JsnFile(const JsnFile & src) : File(src) {
     if(&src == this) return;
+
+    _nodes = src._nodes;
 }
 
 JsnFile::~JsnFile() {

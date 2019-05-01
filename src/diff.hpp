@@ -3,6 +3,7 @@
 #include "file.hpp"
 
 #include <sstream>
+#include <iostream>
 
 class Diff {
     public:
