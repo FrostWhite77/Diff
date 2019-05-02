@@ -16,6 +16,9 @@ class Folder {
 
         void CompareFolders(const Folder & f, Diff * diff);
 
+        bool IsFile(std::string file) const;
+        bool IsDir(std::string file) const;
+
     private:
         std::string _folderName;
 };

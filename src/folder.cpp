@@ -32,3 +32,11 @@ vector<string> Folder::GetFilesInFolder() {
 void Folder::CompareFolders(const Folder & f, Diff * diff) {
 
 }
+
+bool Folder::IsFile(std::string file) const {
+    return !IsDir(file);
+}
+
+bool Folder::IsDir(std::string file) const {
+    return file.size() > 0 && file[file.size() - 1] == '/';
+}
