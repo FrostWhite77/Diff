@@ -18,7 +18,7 @@ class File {
         std::string GetFileName() const;
 
         virtual std::vector<uint8_t> GetBinary();
-        virtual std::vector<char> GetText();
+        virtual std::vector<std::string> GetText();
         virtual std::vector<std::string> GetJSON();
 
         virtual std::ostream & Print(std::ostream & os) const;
@@ -41,7 +41,7 @@ class BinFile : public File {
         virtual bool Load() override;
 
         virtual std::vector<uint8_t> GetBinary() override;
-        virtual std::vector<char> GetText() override;
+        virtual std::vector<std::string> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
         virtual std::ostream & Print(std::ostream & os) const override;
@@ -63,14 +63,14 @@ class TxtFile : public File {
         virtual bool Load() override;
 
         virtual std::vector<uint8_t> GetBinary() override;
-        virtual std::vector<char> GetText() override;
+        virtual std::vector<std::string> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
         virtual std::ostream & Print(std::ostream & os) const override;
         friend std::ostream & operator<<(std::ostream & os, const TxtFile & src);
     
     private:
-        std::vector<char> _chars;
+        std::vector<std::string> _lines;
 };
 
 class JsnFile : public File {
@@ -85,7 +85,7 @@ class JsnFile : public File {
         virtual bool Load() override;
 
         virtual std::vector<uint8_t> GetBinary() override;
-        virtual std::vector<char> GetText() override;
+        virtual std::vector<std::string> GetText() override;
         virtual std::vector<std::string> GetJSON() override;
 
         virtual std::ostream & Print(std::ostream & os) const override;

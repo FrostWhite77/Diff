@@ -38,8 +38,8 @@ vector<uint8_t> File::GetBinary() {
     return vector<uint8_t>();
 }
 
-vector<char> File::GetText() {
-    return vector<char>();
+vector<string> File::GetText() {
+    return vector<string>();
 }
 
 vector<string> File::GetJSON() {
@@ -101,11 +101,22 @@ vector<uint8_t> BinFile::GetBinary() {
     return _bytes;
 }
 
-vector<char> BinFile::GetText() {
+vector<string> BinFile::GetText() {
     if(!_isLoaded) Load();   
-    vector<char> chars;
-    for(size_t i = 0; i < _bytes.size(); i++) chars.push_back((char)_bytes[i]);
-    return chars;
+    vector<string> lines;
+
+    string s;
+    for(size_t i = 0; i < _bytes.size(); i++) {
+        char c = (char)_bytes[i];
+        s.push_back(c);
+
+        if(c == '\n') {
+            lines.push_back(s);
+            s.clear();
+        }
+    }
+
+    return lines;
 }
 
 vector<string> BinFile::GetJSON() {
@@ -130,7 +141,7 @@ TxtFile::TxtFile(string fileName) : File(fileName) {
 TxtFile::TxtFile(const TxtFile & src) : File(src) {
     if(&src == this) return;
 
-    _chars = src._chars;
+    _lines = src._lines;
 }
 
 TxtFile::~TxtFile() {
@@ -142,17 +153,16 @@ TxtFile * TxtFile::Clone() const {
 }
 
 size_t TxtFile::GetFileSize() const {
-    return _chars.size();
+    return _lines.size();
 }
 
 bool TxtFile::Load() {
     ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 
-    char byte;
-    while(f.peek() != EOF) {
-        f.read((char *)&byte, sizeof(byte));
-        _chars.push_back(byte);
+    string line;
+    while(getline(f, line)) {
+        _lines.push_back(line);
     }
 
     f.close();
@@ -164,13 +174,16 @@ bool TxtFile::Load() {
 vector<uint8_t> TxtFile::GetBinary() {
     if(!_isLoaded) Load();   
     vector<uint8_t> bytes;
-    for(size_t i = 0; i < _chars.size(); i++) bytes.push_back((uint8_t)_chars[i]);
+
+    for(size_t i = 0; i < _lines.size(); i++)
+        for(size_t j = 0; j < _lines[i].size(); i++)
+        bytes.push_back((uint8_t)_lines[i][j]);
     return bytes;
 }
 
-vector<char> TxtFile::GetText() {
+vector<string> TxtFile::GetText() {
     if(!_isLoaded) Load();   
-    return _chars;
+    return _lines;
 }
 
 vector<string> TxtFile::GetJSON() {
@@ -219,9 +232,9 @@ vector<uint8_t> JsnFile::GetBinary() {
     return vector<uint8_t>();
 }
 
-vector<char> JsnFile::GetText() {
+vector<string> JsnFile::GetText() {
     if(!_isLoaded) Load();  
-    return vector<char>();
+    return vector<string>();
 }
 
 vector<string> JsnFile::GetJSON() {

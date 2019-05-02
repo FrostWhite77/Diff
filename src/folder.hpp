@@ -5,6 +5,7 @@
 #include <iostream>
 #include <dirent.h>
 #include <sys/types.h>
+#include <algorithm>
 
 class Folder {
     public:
@@ -15,10 +16,12 @@ class Folder {
         std::vector<std::string> GetFilesInFolder();
 
         void CompareFolders(const Folder & f, Diff * diff);
+        bool IsInFolder(const std::string & file) const;
 
         bool IsFile(std::string file) const;
         bool IsDir(std::string file) const;
 
     private:
         std::string _folderName;
+        std::vector<std::string> _files;
 };

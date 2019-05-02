@@ -104,11 +104,11 @@ TxtDiff::~TxtDiff() {
 }
 
 Result TxtDiff::Compare() {
-    vector<char> charsX = _first->GetText();
-    vector<char> charsY = _second->GetText();
+    vector<string> charsX = _first->GetText();
+    vector<string> charsY = _second->GetText();
 
-    vector<char> uniqX;
-    vector<char> uniqY;
+    vector<string> uniqX;
+    vector<string> uniqY;
     
     bool res = true;
 

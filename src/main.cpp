@@ -8,8 +8,10 @@
 using namespace std;
 
 int main() {
-
+    
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
+    
+    /*
     cout << bd << endl;
     cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
 
@@ -66,6 +68,12 @@ int main() {
     auto charsy = cmpResult.GetUniqueYChars();
     for(size_t i = 0; i < charsy.size(); i++) cout << charsy[i];
     cout << endl;
+    */
+
+    Folder f1("./data");
+    Folder f2("./data");
+
+    f1.CompareFolders(f2, &bd);
 
     return 0;
 }
