@@ -1,5 +1,7 @@
 #include "diff.hpp"
 
+using namespace std;
+
 // Diff
 Diff::Diff(const File & firstFile, const File &secondFile) : _first(firstFile.Clone()), _second(secondFile.Clone()) {
     _first->Load();
@@ -47,9 +49,9 @@ Diff & Diff::operator=(const Diff & src) {
     return *this;
 }
 
-std::ostream & operator<<(std::ostream & os, const Diff & src) {
-    os << "--General Diff--" << std::endl;
-    os << "File 1: " << src._first << std::endl;
+ostream & operator<<(ostream & os, const Diff & src) {
+    os << "--General Diff--" << endl;
+    os << "File 1: " << src._first << endl;
     os << "File 2: " << src._second;
 
     return os;
@@ -69,21 +71,21 @@ BinDiff::~BinDiff() {
 }
 
 Result BinDiff::Compare() {
-    std::vector<uint8_t> bytesX = _first->GetBinary();
-    std::vector<uint8_t> bytesY = _second->GetBinary();
+    vector<uint8_t> bytesX = _first->GetBinary();
+    vector<uint8_t> bytesY = _second->GetBinary();
 
-    if(bytesX.size() != bytesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<uint8_t>(), std::vector<uint8_t>());
+    if(bytesX.size() != bytesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<uint8_t>(), vector<uint8_t>());
     for(size_t i = 0; i < bytesX.size(); i++) {
-        //std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
-        if(bytesX[i] != bytesY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<uint8_t>(), std::vector<uint8_t>());
+        //cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << endl;
+        if(bytesX[i] != bytesY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<uint8_t>(), vector<uint8_t>());
     }
 
-    return Result(_first->GetFileName(), _second->GetFileName(), true, std::vector<uint8_t>(), std::vector<uint8_t>());
+    return Result(_first->GetFileName(), _second->GetFileName(), true, vector<uint8_t>(), vector<uint8_t>());
 }   
 
-std::ostream & operator<<(std::ostream & os, const BinDiff & src) {
-    os << "--Binary Diff--" << std::endl;
-    os << "File 1: " << *src._first << std::endl;
+ostream & operator<<(ostream & os, const BinDiff & src) {
+    os << "--Binary Diff--" << endl;
+    os << "File 1: " << *src._first << endl;
     os << "File 2: " << *src._second;
 
     return os;
@@ -103,21 +105,21 @@ TxtDiff::~TxtDiff() {
 }
 
 Result TxtDiff::Compare() {
-    std::vector<char> charsX = _first->GetText();
-    std::vector<char> charsY = _second->GetText();
+    vector<char> charsX = _first->GetText();
+    vector<char> charsY = _second->GetText();
     
-    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<char>(), std::vector<char>());
+    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<char>(), vector<char>());
     for(size_t i = 0; i < charsX.size(); i++) {
-        //std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
-        if(charsX[i] != charsY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<char>(), std::vector<char>());
+        //cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << endl;
+        if(charsX[i] != charsY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<char>(), vector<char>());
     }
 
-    return Result(_first->GetFileName(), _second->GetFileName(), true, std::vector<char>(), std::vector<char>());
+    return Result(_first->GetFileName(), _second->GetFileName(), true, vector<char>(), vector<char>());
 }   
 
-std::ostream & operator<<(std::ostream & os, const TxtDiff & src) {
-    os << "--Txt Diff--" << std::endl;
-    os << "File 1: " << *src._first << std::endl;
+ostream & operator<<(ostream & os, const TxtDiff & src) {
+    os << "--Txt Diff--" << endl;
+    os << "File 1: " << *src._first << endl;
     os << "File 2: " << *src._second;
 
     return os;
@@ -137,12 +139,12 @@ JsnDiff::~JsnDiff() {
 }
 
 Result JsnDiff::Compare() {
-    return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<std::string>(), std::vector<std::string>());
+    return Result(_first->GetFileName(), _second->GetFileName(), false, vector<string>(), vector<string>());
 }   
 
-std::ostream & operator<<(std::ostream & os, const JsnDiff & src) {
-    os << "--JSON Diff--" << std::endl;
-    os << "File 1: " << *src._first << std::endl;
+ostream & operator<<(ostream & os, const JsnDiff & src) {
+    os << "--JSON Diff--" << endl;
+    os << "File 1: " << *src._first << endl;
     os << "File 2: " << *src._second;
 
     return os;

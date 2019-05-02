@@ -1,7 +1,9 @@
 #include "file.hpp"
 
+using namespace std;
+
 // File
-File::File(std::string fileName) : _fileName(fileName), _isLoaded(false) {
+File::File(string fileName) : _fileName(fileName), _isLoaded(false) {
 
 }
 
@@ -28,33 +30,33 @@ bool File::Load() {
     return false;
 }
 
-std::string File::GetFileName() const {
+string File::GetFileName() const {
     return _fileName;
 }
 
-std::vector<uint8_t> File::GetBinary() {
-    return std::vector<uint8_t>();
+vector<uint8_t> File::GetBinary() {
+    return vector<uint8_t>();
 }
 
-std::vector<char> File::GetText() {
-    return std::vector<char>();
+vector<char> File::GetText() {
+    return vector<char>();
 }
 
-std::vector<std::string> File::GetJSON() {
-    return std::vector<std::string>();
+vector<string> File::GetJSON() {
+    return vector<string>();
 }
 
-std::ostream & File::Print(std::ostream & os) const {
+ostream & File::Print(ostream & os) const {
     os << _fileName;
     return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const File & src) {
+ostream & operator<<(ostream & os, const File & src) {
     return src.Print(os);
 }
 
 // BinFile
-BinFile::BinFile(std::string fileName) : File(fileName) {
+BinFile::BinFile(string fileName) : File(fileName) {
 
 }
 
@@ -79,7 +81,7 @@ size_t BinFile::GetFileSize() const {
 bool BinFile::Load() {
     if(_isLoaded) return true;  
 
-    std::ifstream f(_fileName);
+    ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 
     uint8_t byte;
@@ -94,34 +96,34 @@ bool BinFile::Load() {
     return _isLoaded = true;   
 }
 
-std::vector<uint8_t> BinFile::GetBinary() {
+vector<uint8_t> BinFile::GetBinary() {
     if(!_isLoaded) Load();   
     return _bytes;
 }
 
-std::vector<char> BinFile::GetText() {
+vector<char> BinFile::GetText() {
     if(!_isLoaded) Load();   
-    std::vector<char> chars;
+    vector<char> chars;
     for(size_t i = 0; i < _bytes.size(); i++) chars.push_back((char)_bytes[i]);
     return chars;
 }
 
-std::vector<std::string> BinFile::GetJSON() {
-    return std::vector<std::string>();
+vector<string> BinFile::GetJSON() {
+    return vector<string>();
 }
 
-std::ostream & BinFile::Print(std::ostream & os) const {
+ostream & BinFile::Print(ostream & os) const {
     os << "[bin] " << _fileName;
     if(_isLoaded) os << " (size: " << GetFileSize() << ")";
     return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const BinFile & src) {
+ostream & operator<<(ostream & os, const BinFile & src) {
     return src.Print(os);
 }
 
 // TxtFile
-TxtFile::TxtFile(std::string fileName) : File(fileName) {
+TxtFile::TxtFile(string fileName) : File(fileName) {
 
 }
 
@@ -144,7 +146,7 @@ size_t TxtFile::GetFileSize() const {
 }
 
 bool TxtFile::Load() {
-    std::ifstream f(_fileName);
+    ifstream f(_fileName);
     if(!f.is_open() || f.bad()) return false;
 
     char byte;
@@ -159,34 +161,34 @@ bool TxtFile::Load() {
     return _isLoaded = true; 
 }
 
-std::vector<uint8_t> TxtFile::GetBinary() {
+vector<uint8_t> TxtFile::GetBinary() {
     if(!_isLoaded) Load();   
-    std::vector<uint8_t> bytes;
+    vector<uint8_t> bytes;
     for(size_t i = 0; i < _chars.size(); i++) bytes.push_back((uint8_t)_chars[i]);
     return bytes;
 }
 
-std::vector<char> TxtFile::GetText() {
+vector<char> TxtFile::GetText() {
     if(!_isLoaded) Load();   
     return _chars;
 }
 
-std::vector<std::string> TxtFile::GetJSON() {
-    return std::vector<std::string>();
+vector<string> TxtFile::GetJSON() {
+    return vector<string>();
 }
 
-std::ostream & TxtFile::Print(std::ostream & os) const {
+ostream & TxtFile::Print(ostream & os) const {
     os << "[txt] " << _fileName;
     if(_isLoaded) os << " (size: " << GetFileSize() << ")";
     return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const TxtFile & src) {
+ostream & operator<<(ostream & os, const TxtFile & src) {
     return src.Print(os);
 }
 
 // JsnFile
-JsnFile::JsnFile(std::string fileName) : File(fileName) {
+JsnFile::JsnFile(string fileName) : File(fileName) {
 
 }
 
@@ -212,27 +214,27 @@ bool JsnFile::Load() {
     return false;
 }
 
-std::vector<uint8_t> JsnFile::GetBinary() {
+vector<uint8_t> JsnFile::GetBinary() {
     if(!_isLoaded) Load();  
-    return std::vector<uint8_t>();
+    return vector<uint8_t>();
 }
 
-std::vector<char> JsnFile::GetText() {
+vector<char> JsnFile::GetText() {
     if(!_isLoaded) Load();  
-    return std::vector<char>();
+    return vector<char>();
 }
 
-std::vector<std::string> JsnFile::GetJSON() {
+vector<string> JsnFile::GetJSON() {
     if(!_isLoaded) Load();  
     return _nodes;
 }
 
-std::ostream & JsnFile::Print(std::ostream & os) const {
+ostream & JsnFile::Print(ostream & os) const {
     os << "[json] " << _fileName;
     if(_isLoaded) os << " (size: " << GetFileSize() << ")";
     return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const JsnFile & src) {
+ostream & operator<<(ostream & os, const JsnFile & src) {
     return src.Print(os);
 }

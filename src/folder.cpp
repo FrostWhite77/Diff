@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Folder::Folder(std::string folderName) : _folderName(folderName) {
+Folder::Folder(string folderName) : _folderName(folderName) {
 
 }
 
