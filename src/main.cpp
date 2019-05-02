@@ -9,8 +9,6 @@ using namespace std;
 
 int main() {
 
-    cout << "Diff v1.0" << endl;
-
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
     cout << bd << endl;
     cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
@@ -47,7 +45,10 @@ int main() {
     cout << endl << "Folder Class: GetFilesInFolder() Test: " << endl;
 
     Folder fld("./data");
-    fld.GetFilesInFolder();
+    auto fls = fld.GetFilesInFolder();
+    for(const auto & f : fls) {
+        cout << f << endl;
+    }
 
     cout << endl;
 

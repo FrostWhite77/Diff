@@ -1,0 +1,5 @@
+Polymorfismus se vyskytuje ve tridach Diff(parent), BinDiff(child), TxtDiff(child), JsnDiff(child), konretne v metodach Compare(). 
+
+Dale v tridach File(parent), BinFile(child), TxtFile(child) a JsnFile(child) v metodach Load(): kazdy soubor se nacita specificky, 
+binarni a textovy soubor maji podobny algoritmus, ale s jinymy datovymy typy. Soubor typu JSON se nacita specifickym zpusobem behem
+nacitani kontroluje take jeho syntaxe.

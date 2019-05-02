@@ -26,12 +26,7 @@ vector<string> Folder::GetFilesInFolder() {
         files.push_back(dp->d_name);
     }
     closedir(d);
-
-    for(const auto & f : files) {
-        cout << f << endl;
-    }
-
-    return vector<string>();
+    return files;
 }
 
 void Folder::CompareFolders(const Folder & f, Diff * diff) {
