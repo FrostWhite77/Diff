@@ -41,11 +41,13 @@ bool Folder::IsInFolder(const std::string & file) const {
     return find(_files.begin(), _files.end(), file) != _files.end();
 }
 
-void Folder::CompareFolders(const Folder & f, Diff * diff) {
+void Folder::CompareFolders(const Folder & f, Diff & diff) {
     for(size_t i = 0; i < _files.size(); i++) {
         if(f.IsInFolder(_files[i])) {
             // compare files
-            cout << _files[i] << " is in " << _folderName << " and in " << f._folderName << endl;
+            diff.SetFirst(BinFile(_folderName + "/" + _files[i]));
+            diff.SetSecond(BinFile(f._folderName + "/" + _files[i]));
+            cout << _files[i] << " is in " << _folderName << " and in " << f._folderName << ", are equal: " << boolalpha << diff.Compare().GetResult() << endl;
         }
         else {
             cout << _files[i] << " is in " << _folderName << " but not in " << f._folderName << endl;

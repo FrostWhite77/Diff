@@ -104,19 +104,19 @@ TxtDiff::~TxtDiff() {
 }
 
 Result TxtDiff::Compare() {
-    vector<string> charsX = _first->GetText();
-    vector<string> charsY = _second->GetText();
+    vector<string> linesX = _first->GetText();
+    vector<string> linesY = _second->GetText();
 
     vector<string> uniqX;
     vector<string> uniqY;
     
     bool res = true;
 
-    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, charsX, charsY);
-    for(size_t i = 0; i < charsX.size(); i++) {
-        if(charsX[i] != charsY[i]) {
-            uniqX.push_back(charsX[i]);
-            uniqY.push_back(charsY[i]);
+    if(linesX.size() != linesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, linesX, linesY);
+    for(size_t i = 0; i < linesX.size(); i++) {
+        if(linesX[i] != linesY[i]) {
+            uniqX.push_back(linesX[i]);
+            uniqY.push_back(linesY[i]);
             res = false;
         }
     }
@@ -146,7 +146,7 @@ JsnDiff::~JsnDiff() {
 }
 
 Result JsnDiff::Compare() {
-    return Result(_first->GetFileName(), _second->GetFileName(), false, vector<string>(), vector<string>());
+    return Result(_first->GetFileName(), _second->GetFileName(), false, vector<int>(), vector<int>());
 }   
 
 ostream & operator<<(ostream & os, const JsnDiff & src) {

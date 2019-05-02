@@ -108,11 +108,13 @@ vector<string> BinFile::GetText() {
     string s;
     for(size_t i = 0; i < _bytes.size(); i++) {
         char c = (char)_bytes[i];
-        s.push_back(c);
 
         if(c == '\n') {
             lines.push_back(s);
             s.clear();
+        }
+        else {
+            s.push_back(c);
         }
     }
 

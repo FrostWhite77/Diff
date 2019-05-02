@@ -70,10 +70,27 @@ int main() {
     cout << endl;
     */
 
-    Folder f1("./data");
-    Folder f2("./data");
+    Folder f1("./data/bin");
+    Folder f2("./data/bin");
 
-    f1.CompareFolders(f2, &bd);
+    f1.CompareFolders(f2, bd);
+
+    TxtDiff tdf (TxtFile("./data/txt/lorem1.txt"), TxtFile("./data/txt/lorem2.txt"));
+    Result res = tdf.Compare();
+
+    auto x = res.GetUniqueXLines();
+    auto y = res.GetUniqueYLines();
+
+    cout << "x: " << endl;
+    for(size_t i = 0; i < x.size(); i++) {
+        cout << x[i] << endl;
+    }
+
+    cout << "y: " << endl;
+    for(size_t i = 0; i < y.size(); i++) {
+        cout << y[i] << endl;
+    }
+
 
     return 0;
 }
