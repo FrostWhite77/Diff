@@ -76,7 +76,6 @@ Result BinDiff::Compare() {
 
     if(bytesX.size() != bytesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<uint8_t>(), vector<uint8_t>());
     for(size_t i = 0; i < bytesX.size(); i++) {
-        //cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << endl;
         if(bytesX[i] != bytesY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<uint8_t>(), vector<uint8_t>());
     }
 
@@ -107,14 +106,22 @@ TxtDiff::~TxtDiff() {
 Result TxtDiff::Compare() {
     vector<char> charsX = _first->GetText();
     vector<char> charsY = _second->GetText();
+
+    vector<char> uniqX;
+    vector<char> uniqY;
     
-    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<char>(), vector<char>());
+    bool res = true;
+
+    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, charsX, charsY);
     for(size_t i = 0; i < charsX.size(); i++) {
-        //cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << endl;
-        if(charsX[i] != charsY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, vector<char>(), vector<char>());
+        if(charsX[i] != charsY[i]) {
+            uniqX.push_back(charsX[i]);
+            uniqY.push_back(charsY[i]);
+            res = false;
+        }
     }
 
-    return Result(_first->GetFileName(), _second->GetFileName(), true, vector<char>(), vector<char>());
+    return Result(_first->GetFileName(), _second->GetFileName(), res, uniqX, uniqY);
 }   
 
 ostream & operator<<(ostream & os, const TxtDiff & src) {
