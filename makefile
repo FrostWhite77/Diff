@@ -24,3 +24,5 @@ $(BLD)result.o: $(SRC)result.cpp $(SRC)result.hpp
 $(BLD)settings.o: $(SRC)settings.cpp $(SRC)settings.hpp 
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)settings.o $(SRC)settings.cpp
 
+clean:
+	rm -rf $(BLD)*.o 
