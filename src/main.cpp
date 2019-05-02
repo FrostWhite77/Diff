@@ -10,13 +10,13 @@ using namespace std;
 int main() {
     BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
     cout << bd << endl;
-    cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
 
     cout << endl;
 
     TxtDiff td(TxtFile("data/file1.txt"), TxtFile("data/file2.txt"));
     cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
     
     cout << endl;
 
@@ -24,14 +24,14 @@ int main() {
     bd.SetSecond(BinFile("data/file2.bin"));
 
     cout << bd << endl;
-    cout << "Are files equal: " << boolalpha << bd.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
 
     cout << endl;
 
     td.SetSecond(BinFile("data/file2.bin"));
 
     cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
 
     cout << endl;
 
@@ -39,7 +39,7 @@ int main() {
     td.SetSecond(TxtFile("data/file2.txt"));
 
     cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare() << endl;
+    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
 
     cout << endl << "Folder Class: GetFilesInFolder() Test: " << endl;
 

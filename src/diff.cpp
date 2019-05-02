@@ -68,17 +68,17 @@ BinDiff::~BinDiff() {
 
 }
 
-bool BinDiff::Compare() {
+Result BinDiff::Compare() {
     std::vector<uint8_t> bytesX = _first->GetBinary();
     std::vector<uint8_t> bytesY = _second->GetBinary();
 
-    if(bytesX.size() != bytesY.size()) return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
+    if(bytesX.size() != bytesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<uint8_t>(), std::vector<uint8_t>());
     for(size_t i = 0; i < bytesX.size(); i++) {
         //std::cout << "cmp: " << (int)bytesX[i] << " ?? " << (int)bytesY[i] << std::endl;
-        if(bytesX[i] != bytesY[i]) return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
+        if(bytesX[i] != bytesY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<uint8_t>(), std::vector<uint8_t>());
     }
 
-    return Result<uint8_t>(_first->GetFileName(), _second->GetFileName(), true).GetResult();
+    return Result(_first->GetFileName(), _second->GetFileName(), true, std::vector<uint8_t>(), std::vector<uint8_t>());
 }   
 
 std::ostream & operator<<(std::ostream & os, const BinDiff & src) {
@@ -102,17 +102,17 @@ TxtDiff::~TxtDiff() {
 
 }
 
-bool TxtDiff::Compare() {
+Result TxtDiff::Compare() {
     std::vector<char> charsX = _first->GetText();
     std::vector<char> charsY = _second->GetText();
     
-    if(charsX.size() != charsY.size()) return Result<char>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
+    if(charsX.size() != charsY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<char>(), std::vector<char>());
     for(size_t i = 0; i < charsX.size(); i++) {
         //std::cout << "cmp: " << charsX[i] << " ?? " << charsY[i] << std::endl;
-        if(charsX[i] != charsY[i]) return Result<char>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
+        if(charsX[i] != charsY[i]) return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<char>(), std::vector<char>());
     }
 
-    return Result<char>(_first->GetFileName(), _second->GetFileName(), true).GetResult();
+    return Result(_first->GetFileName(), _second->GetFileName(), true, std::vector<char>(), std::vector<char>());
 }   
 
 std::ostream & operator<<(std::ostream & os, const TxtDiff & src) {
@@ -136,8 +136,8 @@ JsnDiff::~JsnDiff() {
 
 }
 
-bool JsnDiff::Compare() {
-    return Result<std::string>(_first->GetFileName(), _second->GetFileName(), false).GetResult();
+Result JsnDiff::Compare() {
+    return Result(_first->GetFileName(), _second->GetFileName(), false, std::vector<std::string>(), std::vector<std::string>());
 }   
 
 std::ostream & operator<<(std::ostream & os, const JsnDiff & src) {

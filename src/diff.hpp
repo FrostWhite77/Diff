@@ -15,7 +15,7 @@ class Diff {
         void SetFirst(const File & file);
         void SetSecond(const File & file);
 
-        virtual bool Compare() = 0;
+        virtual Result Compare() = 0;
 
         Diff & operator=(const Diff & src);
         friend std::ostream & operator<<(std::ostream & os, const Diff & src);
@@ -31,7 +31,7 @@ class BinDiff : public Diff {
         BinDiff(const BinDiff & src);
         virtual ~BinDiff();
         
-        virtual bool Compare();
+        virtual Result Compare() override;
 
         friend std::ostream & operator<<(std::ostream & os, const BinDiff & src);
 };
@@ -42,7 +42,7 @@ class TxtDiff : public Diff {
         TxtDiff(const TxtDiff & src);
         virtual ~TxtDiff();
         
-        virtual bool Compare();
+        virtual Result Compare() override;
 
         friend std::ostream & operator<<(std::ostream & os, const TxtDiff & src);
 };
@@ -53,7 +53,7 @@ class JsnDiff : public Diff {
         JsnDiff(const JsnDiff & src);
         virtual ~JsnDiff();
         
-        virtual bool Compare();
+        virtual Result Compare() override;
 
         friend std::ostream & operator<<(std::ostream & os, const JsnDiff & src);
 };
