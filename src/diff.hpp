@@ -2,13 +2,14 @@
 
 #include "file.hpp"
 #include "result.hpp"
+#include "settings.hpp"
 
 #include <sstream>
 #include <iostream>
 
 class Diff {
     public:
-        Diff(const File & firstFile, const File & secondFile);
+        Diff(const File & firstFile, const File & secondFile, Settings * settings = NULL);
         Diff(const Diff & src);
         virtual ~Diff();
         
@@ -23,6 +24,8 @@ class Diff {
     protected:
         File * _first;
         File * _second;
+
+        Settings * _settings;
 };
 
 class BinDiff : public Diff {

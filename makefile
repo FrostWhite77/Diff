@@ -7,12 +7,12 @@ SRC=./src/
 all: diff
 
 diff: $(SRC)main.cpp $(BLD)diff.o $(BLD)folder.o
-	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)result.o
+	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)result.o $(BLD)settings.o
 
 $(BLD)folder.o: $(SRC)folder.cpp $(SRC)folder.hpp $(BLD)diff.o
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)folder.o $(SRC)folder.cpp
 
-$(BLD)diff.o: $(SRC)diff.cpp $(SRC)diff.hpp $(BLD)file.o $(BLD)result.o
+$(BLD)diff.o: $(SRC)diff.cpp $(SRC)diff.hpp $(BLD)file.o $(BLD)result.o $(BLD)settings.o
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)diff.o $(SRC)diff.cpp
 
 $(BLD)file.o: $(SRC)file.cpp $(SRC)file.hpp 
@@ -20,4 +20,7 @@ $(BLD)file.o: $(SRC)file.cpp $(SRC)file.hpp
 
 $(BLD)result.o: $(SRC)result.cpp $(SRC)result.hpp 
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)result.o $(SRC)result.cpp
+
+$(BLD)settings.o: $(SRC)settings.cpp $(SRC)settings.hpp 
+	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)settings.o $(SRC)settings.cpp
 

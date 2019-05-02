@@ -3,7 +3,7 @@
 using namespace std;
 
 // Diff
-Diff::Diff(const File & firstFile, const File &secondFile) : _first(firstFile.Clone()), _second(secondFile.Clone()) {
+Diff::Diff(const File & firstFile, const File &secondFile, Settings * settings) : _first(firstFile.Clone()), _second(secondFile.Clone()), _settings(settings) {
     _first->Load();
     _second->Load();
 }
@@ -13,14 +13,17 @@ Diff::Diff(const Diff & src) {
 
     if(_first != NULL) delete _first; 
     if(_second != NULL) delete _second;
+    if(_settings != NULL) delete _settings;
 
     _first = src._first->Clone();
     _second = src._second->Clone();
+    _settings = src._settings->Clone();
 }
 
 Diff::~Diff() {
     if(_first != NULL) delete _first; 
     if(_second != NULL) delete _second;
+    if(_settings != NULL) delete _settings;
 }
 
 void Diff::SetFirst(const File & file) {
