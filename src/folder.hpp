@@ -1,10 +1,10 @@
+#include "diff.hpp"
+
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include <dirent.h>
 #include <sys/types.h>
-
-#include "diff.hpp"
 
 class Folder {
     public:
