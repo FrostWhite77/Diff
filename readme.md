@@ -4,4 +4,4 @@
 Command line tool Diff21, which can compare 3 types of file: bianry, text and json. Except the standard comparations between same
 file types, Diff21 can compare files with different types. Folder comparations are also possible. When comparing file and folder, file
 is looked up in folder, and if folder contains file with same type and name, comparation will take place. Text files can be even compared
-case and incase sensitive or can ignore whitespaces. Diff21 can also check syntax when loading json file.
+case sensitive and insensitive or can ignore whitespaces. Diff21 can also check syntax when loading json file.
