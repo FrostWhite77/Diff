@@ -4,7 +4,8 @@
 #include <sstream>
 
 class Result {
-    public: 
+    public:
+        Result(const std::string & fileX, const std::string & fileY, bool result);
         Result(const std::string & fileX, const std::string & fileY, bool result, std::vector<uint8_t> bytesX, std::vector<uint8_t> bytesY);
         Result(const std::string & fileX, const std::string & fileY, bool result, std::vector<std::string> linesX, std::vector<std::string> linesY);
         Result(const std::string & fileX, const std::string & fileY, bool result, std::vector<int> nodesX, std::vector<int> nodesY);

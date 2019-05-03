@@ -55,6 +55,12 @@ void Folder::CompareFolders(const Folder & f, Diff & diff) {
     }
 }
 
+Result Folder::CompareWithFile(const File & f, Diff & diff) {
+    if(!IsInFolder(f.GetFileName())) return Result(f.GetFileName(), _folderName, false);
+    diff.SetFirst(f);
+    return Result(f.GetFileName(), _folderName + "/" + f.GetFileName(), false);
+}
+
 bool Folder::IsFile(std::string file) const {
     return !IsDir(file);
 }

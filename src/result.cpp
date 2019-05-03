@@ -2,6 +2,10 @@
 
 using namespace std;
 
+Result::Result(const std::string & fileX, const std::string & fileY, bool result) : _fileX(fileX), _bytesX(), _linesX(), _nodesX(), _fileY(fileY), _bytesY(), _linesY(), _nodesY(), _result(result) {
+
+}
+
 Result::Result(const string & fileX, const string & fileY, bool result, vector<uint8_t> bytesX, vector<uint8_t> bytesY) : _fileX(fileX), _bytesX(bytesX), _linesX(), _nodesX(), _fileY(fileY), _bytesY(bytesY), _linesY(), _nodesY(), _result(result) {
 
 }
