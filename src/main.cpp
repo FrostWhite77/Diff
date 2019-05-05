@@ -13,15 +13,22 @@ File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
 bool Exists(const string path);
 
+bool charCmp(char x, char y) {
+    return toupper(x) == toupper(y); 
+}
+
 int main() {
     
-    BinDiff bd(BinFile("data/file1.bin"), BinFile("data/file2.bin"));
+    TxtDiff td(TxtFile("data/txt/sensitivity1.txt"), TxtFile("data/txt/sensitivity2.txt"));
     
-    /*
-    cout << bd << endl;
-    cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
+    cout << td << endl;
+    
+    cout << "Are files equal (case insensitive): " << boolalpha << td.Compare(charCmp).GetResult() << endl;
+    cout << "Are files equal (case   sensitive): " << boolalpha << td.Compare().GetResult() << endl;
 
-    cout << endl;
+    //cout << endl;
+
+    /*
 
     TxtDiff td(TxtFile("data/file1.txt"), TxtFile("data/file2.txt"));
     cout << td << endl;
@@ -74,8 +81,7 @@ int main() {
     auto charsy = cmpResult.GetUniqueYChars();
     for(size_t i = 0; i < charsy.size(); i++) cout << charsy[i];
     cout << endl;
-    */
-
+    
     Folder f1("./data/bin");
     Folder f2("./data/bin");
 
@@ -96,6 +102,7 @@ int main() {
     for(size_t i = 0; i < y.size(); i++) {
         cout << y[i] << endl;
     }
+    */
 
     return 0;
 }
