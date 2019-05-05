@@ -73,7 +73,7 @@ BinDiff::~BinDiff() {
 
 }
 
-Result BinDiff::Compare(bool (*f)(char, char)) {
+Result BinDiff::Compare(bool (*compareParts)(char, char)) {
     vector<uint8_t> bytesX = _first->GetBinary();
     vector<uint8_t> bytesY = _second->GetBinary();
 
@@ -106,7 +106,7 @@ TxtDiff::~TxtDiff() {
 
 }
 
-Result TxtDiff::Compare(bool (*f)(char, char)) {
+Result TxtDiff::Compare(bool (*compareParts)(char, char)) {
     vector<string> linesX = _first->GetText();
     vector<string> linesY = _second->GetText();
 
@@ -117,7 +117,7 @@ Result TxtDiff::Compare(bool (*f)(char, char)) {
 
     if(linesX.size() != linesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, linesX, linesY);
     for(size_t i = 0; i < linesX.size(); i++) {
-        if(!CompareLines(linesX[i], linesY[i], f)) {
+        if(!CompareLines(linesX[i], linesY[i], compareParts)) {
             uniqX.push_back(linesX[i]);
             uniqY.push_back(linesY[i]);
             res = false;
@@ -127,12 +127,12 @@ Result TxtDiff::Compare(bool (*f)(char, char)) {
     return Result(_first->GetFileName(), _second->GetFileName(), res, uniqX, uniqY);
 }   
 
-bool TxtDiff::CompareLines(std::string lline, std::string rline, bool (*f)(char, char)) {
+bool TxtDiff::CompareLines(string lline, string rline, bool (*compareParts)(char, char)) {
     if(lline.size() != rline.size()) return false;
 
     for(size_t i = 0; i < lline.size(); i++) {
-        if(f != NULL) {
-            if(!f(lline[i], rline[i])) return false;
+        if(compareParts != NULL) {
+            if(!compareParts(lline[i], rline[i])) return false;
         }
         else {
             if(lline[i] != rline[i]) return false;
@@ -163,7 +163,7 @@ JsnDiff::~JsnDiff() {
 
 }
 
-Result JsnDiff::Compare(bool (*f)(char, char)) {
+Result JsnDiff::Compare(bool (*compareParts)(char, char)) {
     return Result(_first->GetFileName(), _second->GetFileName(), false, vector<int>(), vector<int>());
 }   
 

@@ -16,7 +16,7 @@ class Diff {
         void SetFirst(const File & file);
         void SetSecond(const File & file);
 
-        virtual Result Compare(bool (*f)(char, char) = NULL) = 0;
+        virtual Result Compare(bool (*compareParts)(char, char) = NULL) = 0;
 
         Diff & operator=(const Diff & src);
         friend std::ostream & operator<<(std::ostream & os, const Diff & src);
@@ -34,7 +34,7 @@ class BinDiff : public Diff {
         BinDiff(const BinDiff & src);
         virtual ~BinDiff();
         
-        virtual Result Compare(bool (*f)(char, char) = NULL) override;
+        virtual Result Compare(bool (*compareParts)(char, char) = NULL) override;
 
         friend std::ostream & operator<<(std::ostream & os, const BinDiff & src);
 };
@@ -45,8 +45,8 @@ class TxtDiff : public Diff {
         TxtDiff(const TxtDiff & src);
         virtual ~TxtDiff();
         
-        virtual Result Compare(bool (*f)(char, char) = NULL) override;
-        bool CompareLines(std::string lline, std::string rline, bool (*f)(char, char) = NULL);
+        virtual Result Compare(bool (*compareParts)(char, char) = NULL) override;
+        bool CompareLines(std::string lline, std::string rline, bool (*compareParts)(char, char) = NULL);
 
         friend std::ostream & operator<<(std::ostream & os, const TxtDiff & src);
 };
@@ -57,7 +57,7 @@ class JsnDiff : public Diff {
         JsnDiff(const JsnDiff & src);
         virtual ~JsnDiff();
         
-        virtual Result Compare(bool (*f)(char, char) = NULL) override;
+        virtual Result Compare(bool (*compareParts)(char, char) = NULL) override;
 
         friend std::ostream & operator<<(std::ostream & os, const JsnDiff & src);
 };
