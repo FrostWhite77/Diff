@@ -52,7 +52,9 @@ class JSONArray : public JSONNode {
 
     private:
         std::string _name;
-        std::vector<JSONPair *> _vals;
+        std::vector<std::string> _vals;
 };
 
 JSONNode * ReadNode(std::ifstream ifs);
+JSONPair * ReadPair(std::ifstream ifs);
+JSONArray * ReadArray(std::ifstream ifs);
