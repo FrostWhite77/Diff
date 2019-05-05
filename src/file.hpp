@@ -1,10 +1,12 @@
 #pragma once
 
+#include "ioobject.hpp"
+
 #include <sstream>
 #include <fstream>
 #include <vector>
 
-class File {
+class File : public IOObject {
     public:
         File(std::string fileName = "");
         File(const File & src);

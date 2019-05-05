@@ -4,8 +4,14 @@
 
 #include "diff.hpp"
 #include "folder.hpp"
+#include "ioobject.hpp"
 
 using namespace std;
+
+IOObject * GetIOObject(const string & fileName);
+File * GetFile(const string & fileName);
+Folder * GetFolder(const string & fileName);
+bool Exists(const string path);
 
 int main() {
     
@@ -91,6 +97,44 @@ int main() {
         cout << y[i] << endl;
     }
 
-
     return 0;
+}
+
+IOObject * GetIOObject(const string & fileName) {
+    IOObject * io = GetFile(fileName);
+    if(io == NULL) {
+        io = GetFolder(fileName);
+    }
+    return io;
+}
+
+File * GetFile(const string & fileName) {
+    // is binary file
+    size_t position = 0;
+    if((position = fileName.find(".bin")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+        return new BinFile(fileName);
+    }
+    // is text file
+    else if((position = fileName.find(".txt")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+        return new TxtFile(fileName);
+    }
+    // is json file
+    else if((position = fileName.find(".json")) != string::npos && position + 5 == fileName.size() && Exists(fileName)) {
+        return new JsnFile(fileName);
+    }
+    else {
+        return NULL;
+    }
+}
+
+Folder * GetFolder(const string & fileName) {
+    if(Exists(fileName)) {
+        return new Folder(fileName);
+    }
+    return NULL;
+}
+
+bool Exists(const string path) {
+    ifstream ifs(path.c_str());
+    return ifs.good();    
 }
