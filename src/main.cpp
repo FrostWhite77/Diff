@@ -4,11 +4,9 @@
 
 #include "diff.hpp"
 #include "folder.hpp"
-#include "ioobject.hpp"
 
 using namespace std;
 
-IOObject * GetIOObject(const string & fileName);
 File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
 bool Exists(const string path);
@@ -105,14 +103,6 @@ int main() {
     */
 
     return 0;
-}
-
-IOObject * GetIOObject(const string & fileName) {
-    IOObject * io = GetFile(fileName);
-    if(io == NULL) {
-        io = GetFolder(fileName);
-    }
-    return io;
 }
 
 File * GetFile(const string & fileName) {

@@ -1,5 +1,4 @@
 #include "diff.hpp"
-#include "ioobject.hpp"
 
 #include <vector>
 #include <sstream>
@@ -8,7 +7,7 @@
 #include <sys/types.h>
 #include <algorithm>
 
-class Folder : public IOObject {
+class Folder {
     public:
         Folder(std::string folderName = "./");
         Folder(const Folder & src);
