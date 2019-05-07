@@ -6,8 +6,8 @@ SRC=./src/
 
 all: diff
 
-diff: $(SRC)main.cpp $(BLD)diff.o $(BLD)folder.o $(BLD)result.o
-	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)result.o $(BLD)settings.o
+diff: $(SRC)main.cpp $(BLD)diff.o $(BLD)folder.o $(BLD)result.o $(BLD)IOContainer.o
+	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)result.o $(BLD)settings.o $(BLD)IOContainer.o
 
 $(BLD)folder.o: $(SRC)folder.cpp $(SRC)folder.hpp $(BLD)diff.o $(BLD)result.o
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)folder.o $(SRC)folder.cpp
@@ -23,6 +23,9 @@ $(BLD)result.o: $(SRC)result.cpp $(SRC)result.hpp
 
 $(BLD)settings.o: $(SRC)settings.cpp $(SRC)settings.hpp 
 	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)settings.o $(SRC)settings.cpp
+
+$(BLD)IOContainer.o: $(SRC)IOContainer.cpp $(SRC)IOContainer.hpp 
+	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)IOContainer.o $(SRC)IOContainer.cpp
 
 clean:
 	rm -rf $(BLD)*.o 

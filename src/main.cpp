@@ -4,9 +4,11 @@
 
 #include "diff.hpp"
 #include "folder.hpp"
+#include "IOContainer.hpp"
 
 using namespace std;
 
+IOContainer GetIO(const string & fileName);
 File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
 bool Exists(const string path);
@@ -16,14 +18,17 @@ bool charCmp(char x, char y) {
 }
 
 int main() {
-    
-    TxtDiff td(TxtFile("data/txt/sensitivity1.txt"), TxtFile("data/txt/sensitivity2.txt"));
-    
-    cout << td << endl;
-    
-    cout << "Are files equal (case insensitive): " << boolalpha << td.Compare(charCmp).GetResult() << endl;
-    cout << "Are files equal (case   sensitive): " << boolalpha << td.Compare().GetResult() << endl;
 
+    auto fa = GetIO("data/txt/sensitivity1.txt");
+    auto fb = GetIO("data/txt/sensitivity2.txt");
+
+    if(!fa.IsDir() && !fb.IsDir())
+    {
+        TxtDiff td(*fa.GetFile(), *fb.GetFile());
+        cout << td << endl;
+        cout << "Are files equal (case insensitive): " << boolalpha << td.Compare(charCmp).GetResult() << endl;
+        cout << "Are files equal (case   sensitive): " << boolalpha << td.Compare().GetResult() << endl;
+    }
     //cout << endl;
 
     /*
@@ -103,6 +108,12 @@ int main() {
     */
 
     return 0;
+}
+
+IOContainer GetIO(const string & fileName) {
+    File * x = GetFile(fileName);
+    Folder * y = x == NULL ? GetFolder(fileName) : NULL;
+    return IOContainer(x, y, x == NULL);
 }
 
 File * GetFile(const string & fileName) {
