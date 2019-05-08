@@ -22,6 +22,9 @@ class Result {
         std::vector<std::string> GetUniqueYLines() const;
         std::vector<int> GetUniqueYNodes() const;
 
+        std::ostream & Print(std::ostream & os, bool verbose = false) const;
+        friend std::ostream & operator<<(std::ostream & os, const Result & x);
+
     private:
         std::string _fileX;
         std::vector<uint8_t> _bytesX;

@@ -12,100 +12,127 @@ IOContainer GetIO(const string & fileName);
 File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
 bool Exists(const string path);
+void SetCompareType(int type);
+
+bool lineCmpIncase(const string & ll, const string & lr) {
+    if(ll.size() != lr.size()) return false;
+    for(size_t i = 0; i < ll.size(); i++) {
+        if(toupper(ll[i]) != toupper(lr[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int compareIgnored(const string & ll, const string & lr) {
+
+    const char * l = ll.c_str();
+    const char * r = lr.c_str();
+
+    while (true) {
+        while (*l != '\0' && isspace((unsigned char)*l)) l++;
+        while (*r != '\0' && isspace((unsigned char)*r)) r++;
+        if (*l == '\0' || *r == '\0') {
+          return (*r == '\0') - (*l == '\0');
+        }
+        if (*l != *r) {
+          return (unsigned char)*r - (unsigned char)*l;
+        }
+        l++;
+        r++;
+    }
+
+    return 0;
+}
+
+bool lineCmpWhtIgn(const string & ll, const string & lr) {
+    int r = compareIgnored(ll, lr);
+    if(r == 0) return true;
+    return false;
+}
 
 bool charCmp(char x, char y) {
     return toupper(x) == toupper(y); 
 }
 
-int main() {
+int CompareType = -1;
+bool DifferentTypes = false;
 
-    auto fa = GetIO("data/txt/sensitivity1.txt");
-    auto fb = GetIO("data/txt/sensitivity2.txt");
+bool caseInsensitive = false;
+bool ignoreWhitespace = false;
 
-    if(!fa.IsDir() && !fb.IsDir())
+int main(int argc, char * argv[]) {   
+    if(argc <= 2) {
+        cout << "Invalid number of arguments!" << endl;
+        return 1;
+    }
+
+    vector<File *> files;
+    vector<Folder *> folders;
+
+    size_t i = 0;
+    for(i = 1; i < (size_t)argc && i < 3; i++) {
+        string current(argv[i]);
+        
+        auto file = GetFile(current);
+        if(file != NULL) {
+            files.push_back(file);
+            //cout << argv[i] << " -> is file!" << endl;
+            continue;
+        }
+
+        auto folder = GetFolder(current);
+        if(file != NULL) {
+            folders.push_back(folder);
+            //cout << argv[i] << " -> is folder!" << endl;
+            continue;
+        }
+
+        cout << argv[i] << " -> not an IO Object!" << endl;
+    }
+
+
+
+    for(i = i; i < (size_t)argc; i++) {
+        if(string(argv[i]) == "-i" && CompareType == 1) {
+            //cout << "switched to case insenstivite comparison" << endl;
+            ignoreWhitespace = true;
+        }
+        if(string(argv[i]) == "-c" && CompareType == 1) {
+            //cout << "switched to case insenstivite comparison" << endl;
+            caseInsensitive = true;
+        }
+    }
+
+    //cout << "CompareType: " << CompareType << " // 0:bin, 1:txt, 2:jsn" << endl;
+    //cout << "DifferentTypes: " << boolalpha << DifferentTypes << endl;
+
+    Diff * diff = NULL;
+    if(files.size() == 2)
     {
-        TxtDiff td(*fa.GetFile(), *fb.GetFile());
-        cout << td << endl;
-        cout << "Are files equal (case insensitive): " << boolalpha << td.Compare(charCmp).GetResult() << endl;
-        cout << "Are files equal (case   sensitive): " << boolalpha << td.Compare().GetResult() << endl;
-    }
-    //cout << endl;
+        switch(CompareType)
+        {
+            case 0:
+                diff = new BinDiff(*files[0], *files[1]);
+                break;
+            case 1:
+                diff = new TxtDiff(*files[0], *files[1]);
+                break;
+            case 2:
+                diff = new JsnDiff(*files[0], *files[1]);
+                break;
+        }
 
-    /*
+        bool (*func)(const string &, const string &) = NULL;
+        if(caseInsensitive) {
+            func = lineCmpIncase;
+        }
+        else if(ignoreWhitespace) {
+            func = lineCmpWhtIgn;
+        }
 
-    TxtDiff td(TxtFile("data/file1.txt"), TxtFile("data/file2.txt"));
-    cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
-    
-    cout << endl;
-
-    bd.SetFirst(TxtFile("data/file1.txt"));
-    bd.SetSecond(BinFile("data/file2.bin"));
-
-    cout << bd << endl;
-    cout << "Are files equal: " << boolalpha << bd.Compare().GetResult() << endl;
-
-    cout << endl;
-
-    td.SetSecond(BinFile("data/file2.bin"));
-
-    cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
-
-    cout << endl;
-
-    td.SetFirst(BinFile("data/file2.bin"));
-    td.SetSecond(TxtFile("data/file2.txt"));
-
-    cout << td << endl;
-    cout << "Are files equal: " << boolalpha << td.Compare().GetResult() << endl;
-
-    cout << endl << "Folder Class: GetFilesInFolder() Test: " << endl;
-
-    Folder fld("./data");
-    auto fls = fld.GetFilesInFolder();
-    for(const auto & f : fls) {
-        cout << f << endl;
-    }
-
-    cout << endl;
-
-    TxtDiff td2(TxtFile("data/file1.txt"), TxtFile("data/file2.txt"));
-    cout << td2 << endl;
-    Result cmpResult = td2.Compare();
-    cout << "Are files equal: " << boolalpha << cmpResult.GetResult() << endl;
-    
-    cout << "unique in X: ";
-    auto charsx = cmpResult.GetUniqueXChars();
-    for(size_t i = 0; i < charsx.size(); i++) cout << charsx[i];
-    cout << endl;
-
-    cout << "unique in Y: ";
-    auto charsy = cmpResult.GetUniqueYChars();
-    for(size_t i = 0; i < charsy.size(); i++) cout << charsy[i];
-    cout << endl;
-    
-    Folder f1("./data/bin");
-    Folder f2("./data/bin");
-
-    f1.CompareFolders(f2, bd);
-
-    TxtDiff tdf (TxtFile("./data/txt/lorem1.txt"), TxtFile("./data/txt/lorem2.txt"));
-    Result res = tdf.Compare();
-
-    auto x = res.GetUniqueXLines();
-    auto y = res.GetUniqueYLines();
-
-    cout << "x: " << endl;
-    for(size_t i = 0; i < x.size(); i++) {
-        cout << x[i] << endl;
-    }
-
-    cout << "y: " << endl;
-    for(size_t i = 0; i < y.size(); i++) {
-        cout << y[i] << endl;
-    }
-    */
+        cout << diff->Compare(func) << endl;
+    }    
 
     return 0;
 }
@@ -120,14 +147,17 @@ File * GetFile(const string & fileName) {
     // is binary file
     size_t position = 0;
     if((position = fileName.find(".bin")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+        SetCompareType(0);
         return new BinFile(fileName);
     }
     // is text file
     else if((position = fileName.find(".txt")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+        SetCompareType(1);
         return new TxtFile(fileName);
     }
     // is json file
     else if((position = fileName.find(".json")) != string::npos && position + 5 == fileName.size() && Exists(fileName)) {
+        SetCompareType(2);
         return new JsnFile(fileName);
     }
     else {
@@ -145,4 +175,17 @@ Folder * GetFolder(const string & fileName) {
 bool Exists(const string path) {
     ifstream ifs(path.c_str());
     return ifs.good();    
+}
+
+void SetCompareType(int type) {
+    if(CompareType == -1) {
+        CompareType = type;
+        return;
+    }
+
+    if(CompareType == type) {
+        return;
+    } 
+
+    DifferentTypes = true;
 }

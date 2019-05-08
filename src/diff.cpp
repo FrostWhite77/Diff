@@ -73,7 +73,7 @@ BinDiff::~BinDiff() {
 
 }
 
-Result BinDiff::Compare(bool (*compareParts)(char, char)) {
+Result BinDiff::Compare(bool (*compareParts)(const string &, const string &)) {
     vector<uint8_t> bytesX = _first->GetBinary();
     vector<uint8_t> bytesY = _second->GetBinary();
 
@@ -106,7 +106,7 @@ TxtDiff::~TxtDiff() {
 
 }
 
-Result TxtDiff::Compare(bool (*compareParts)(char, char)) {
+Result TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) {
     vector<string> linesX = _first->GetText();
     vector<string> linesY = _second->GetText();
 
@@ -117,30 +117,24 @@ Result TxtDiff::Compare(bool (*compareParts)(char, char)) {
 
     if(linesX.size() != linesY.size()) return Result(_first->GetFileName(), _second->GetFileName(), false, linesX, linesY);
     for(size_t i = 0; i < linesX.size(); i++) {
-        if(!CompareLines(linesX[i], linesY[i], compareParts)) {
-            uniqX.push_back(linesX[i]);
-            uniqY.push_back(linesY[i]);
-            res = false;
+        if(compareParts != NULL) {
+            if(!compareParts(linesX[i], linesY[i])) {
+                uniqX.push_back(linesX[i]);
+                uniqY.push_back(linesY[i]);
+                res = false;
+            }
+        }
+        else {
+            if(linesX[i] != linesY[i]) {
+                uniqX.push_back(linesX[i]);
+                uniqY.push_back(linesY[i]);
+                res = false;
+            }
         }
     }
 
     return Result(_first->GetFileName(), _second->GetFileName(), res, uniqX, uniqY);
 }   
-
-bool TxtDiff::CompareLines(string lline, string rline, bool (*compareParts)(char, char)) {
-    if(lline.size() != rline.size()) return false;
-
-    for(size_t i = 0; i < lline.size(); i++) {
-        if(compareParts != NULL) {
-            if(!compareParts(lline[i], rline[i])) return false;
-        }
-        else {
-            if(lline[i] != rline[i]) return false;
-        } 
-    }
-
-    return true;
-}
 
 ostream & operator<<(ostream & os, const TxtDiff & src) {
     os << "--Txt Diff--" << endl;
@@ -163,7 +157,7 @@ JsnDiff::~JsnDiff() {
 
 }
 
-Result JsnDiff::Compare(bool (*compareParts)(char, char)) {
+Result JsnDiff::Compare(bool (*compareParts)(const string &, const string &)) {
     return Result(_first->GetFileName(), _second->GetFileName(), false, vector<int>(), vector<int>());
 }   
 

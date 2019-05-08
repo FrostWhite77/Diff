@@ -65,3 +65,12 @@ vector<string> Result::GetUniqueYLines() const {
 vector<int> Result::GetUniqueYNodes() const {
     return _nodesY;
 }
+
+ostream & Result::Print(ostream & os, bool verbose) const {
+    os << "Result: " << boolalpha << _result;
+    return os;
+}
+
+ostream & operator<<(std::ostream & os, const Result & x) {
+    return x.Print(os);
+}
