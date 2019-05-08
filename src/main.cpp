@@ -45,6 +45,30 @@ int compareIgnored(const string & ll, const string & lr) {
     return 0;
 }
 
+int compareIgnCaseIns(const string & ll, const string & lr) {
+    const char * l = ll.c_str();
+    const char * r = lr.c_str();
+
+    while (true) {
+        while (*l != '\0' && isspace((unsigned char)*l)) l++;
+        while (*r != '\0' && isspace((unsigned char)*r)) r++;
+        if (*l == '\0' || *r == '\0') {
+          return (*r == '\0') - (*l == '\0');
+        }
+        if (toupper(*l) != toupper(*r)) {
+          return (unsigned char)*r - (unsigned char)*l;
+        }
+        l++;
+        r++;
+    }
+}
+
+bool lineCmpWthIgnCaseIns(const string & ll, const string & lr) {
+    int r = compareIgnCaseIns(ll, lr);
+    if(r == 0) return true;
+    return false;
+}
+
 bool lineCmpWhtIgn(const string & ll, const string & lr) {
     int r = compareIgnored(ll, lr);
     if(r == 0) return true;
@@ -124,7 +148,10 @@ int main(int argc, char * argv[]) {
         }
 
         bool (*func)(const string &, const string &) = NULL;
-        if(caseInsensitive) {
+        if(caseInsensitive && ignoreWhitespace) {
+            func = lineCmpWthIgnCaseIns;
+        }
+        else if(caseInsensitive) {
             func = lineCmpIncase;
         }
         else if(ignoreWhitespace) {
