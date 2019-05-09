@@ -18,7 +18,7 @@ class Folder {
         std::vector<std::string> GetFilesInFolder();
 
         void CompareFolders(const Folder & f, Diff & diff);
-        Result CompareWithFile(const File & f, Diff & diff);
+        Result * CompareWithFile(const File & f, Diff & diff);
         bool IsInFolder(const std::string & file) const;
 
         bool IsFile(std::string file) const;

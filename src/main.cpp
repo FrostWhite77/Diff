@@ -169,7 +169,9 @@ int main(int argc, char * argv[]) {
             func = compareIgnored;
         }
 
-        cout << diff->Compare(func) << endl;
+        auto result = diff->Compare(func); 
+        result->Print(cout, true);
+        delete result;
     }    
 
     for(auto f : files) delete f;

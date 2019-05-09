@@ -47,7 +47,9 @@ void Folder::CompareFolders(const Folder & f, Diff & diff) {
             // compare files
             diff.SetFirst(BinFile(_folderName + "/" + _files[i]));
             diff.SetSecond(BinFile(f._folderName + "/" + _files[i]));
-            cout << _files[i] << " is in " << _folderName << " and in " << f._folderName << ", are equal: " << boolalpha << diff.Compare().GetResult() << endl;
+            auto tmp = diff.Compare();
+            cout << _files[i] << " is in " << _folderName << " and in " << f._folderName << ", are equal: " << boolalpha << tmp->GetResult() << endl;
+            delete tmp;
         }
         else {
             cout << _files[i] << " is in " << _folderName << " but not in " << f._folderName << endl;
@@ -55,10 +57,10 @@ void Folder::CompareFolders(const Folder & f, Diff & diff) {
     }
 }
 
-Result Folder::CompareWithFile(const File & f, Diff & diff) {
-    if(!IsInFolder(f.GetFileName())) return Result(f.GetFileName(), _folderName, false);
+Result * Folder::CompareWithFile(const File & f, Diff & diff) {
+    if(!IsInFolder(f.GetFileName())) return new Result(f.GetFileName(), _folderName, false);
     diff.SetFirst(f);
-    return Result(f.GetFileName(), _folderName + "/" + f.GetFileName(), false);
+    return new Result(f.GetFileName(), _folderName + "/" + f.GetFileName(), false);
 }
 
 bool Folder::IsFile(std::string file) const {

@@ -2,19 +2,8 @@
 
 using namespace std;
 
-Result::Result(const std::string & fileX, const std::string & fileY, bool result) : _fileX(fileX), _bytesX(), _linesX(), _nodesX(), _fileY(fileY), _bytesY(), _linesY(), _nodesY(), _result(result) {
-
-}
-
-Result::Result(const string & fileX, const string & fileY, bool result, vector<uint8_t> bytesX, vector<uint8_t> bytesY) : _fileX(fileX), _bytesX(bytesX), _linesX(), _nodesX(), _fileY(fileY), _bytesY(bytesY), _linesY(), _nodesY(), _result(result) {
-
-}
-
-Result::Result(const string & fileX, const string & fileY, bool result, vector<string> linesX, vector<string> linesY) : _fileX(fileX), _bytesX(), _linesX(linesX), _nodesX(), _fileY(fileY), _bytesY(), _linesY(linesY), _nodesY(), _result(result) {
-
-}
-
-Result::Result(const string & fileX, const string & fileY, bool result, vector<int> nodesX, vector<int> nodesY) : _fileX(fileX), _bytesX(), _linesX(), _nodesX(nodesX), _fileY(fileY), _bytesY(), _linesY(), _nodesY(nodesY), _result(result) {
+// Result
+Result::Result(const string & fileX, const string & fileY, bool result) : _fileX(fileX), _fileY(fileY), _result(result) {
 
 }
 
@@ -24,14 +13,6 @@ Result::Result(const Result & src) {
     _result = src._result;
     _fileX = src._fileX;
     _fileY = src._fileY;
-
-    _bytesX = src._bytesX;
-    _linesX = src._linesX;
-    _nodesX = src._nodesX;
-
-    _bytesY = src._bytesY;
-    _linesY = src._linesY;
-    _nodesY = src._nodesY;
 }
 
 Result::~Result() {
@@ -43,34 +24,153 @@ bool Result::GetResult() const {
 }   
 
 vector<uint8_t> Result::GetUniqueXBytes() const {
-    return _bytesX;
+    return vector<uint8_t>();
 }
 
 vector<string> Result::GetUniqueXLines() const {
-    return _linesX;
+    return vector<string>();
 }
 
 vector<int> Result::GetUniqueXNodes() const {
-    return _nodesX;
+    return vector<int>();
 }
 
 vector<uint8_t> Result::GetUniqueYBytes() const {
-    return _bytesY;
+    return vector<uint8_t>();
 }
 
 vector<string> Result::GetUniqueYLines() const {
-    return _linesY;
+    return vector<string>();
 }
 
 vector<int> Result::GetUniqueYNodes() const {
-    return _nodesY;
+    return vector<int>();
 }
 
 ostream & Result::Print(ostream & os, bool verbose) const {
-    os << "Result: " << boolalpha << _result;
+    os << "Comparing " << _fileX << " and " << _fileY << ": result: " << boolalpha << _result;
     return os;
 }
 
-ostream & operator<<(std::ostream & os, const Result & x) {
+ostream & operator<<(ostream & os, const Result & x) {
     return x.Print(os);
+}
+
+// BinResult
+BinResult::BinResult(const string & fileX, const string & fileY, bool result) : Result(fileX, fileY, result) {
+
+}
+
+BinResult::BinResult(const string & fileX, const string & fileY, bool result, vector<uint8_t> bytesX, vector<uint8_t> bytesY) 
+    : Result(fileX, fileY, result), _bytesX(bytesX), _bytesY(bytesY) {
+
+}
+
+BinResult::BinResult(const BinResult & src) : Result(src) {
+    if(&src == this) return;
+
+    _bytesX = src._bytesX;
+    _bytesY = src._bytesY;
+}
+
+BinResult::~BinResult() {
+
+}
+
+ostream & BinResult::Print(ostream & os, bool verbose) const {
+    Result::Print(os);
+
+    if(verbose) {
+        os << endl << "Unique bytes in " << _fileX << ": ";
+        for(size_t i = 0; i < _bytesX.size(); i++) {
+            os << _bytesX[i] << " ";
+        }
+        
+        os << endl << "Unique bytes in " << _fileY << ": ";
+        for(size_t i = 0; i < _bytesY.size(); i++) {
+            os << _bytesY[i] << " ";
+        }
+    }
+
+    os << endl;
+    return os;
+}
+
+// TxtResult
+TxtResult::TxtResult(const string & fileX, const string & fileY, bool result) : Result(fileX, fileY, result) {
+
+}
+
+TxtResult::TxtResult(const string & fileX, const string & fileY, bool result, vector<string> linesX, vector<string> linesY) 
+    : Result(fileX, fileY, result), _linesX(linesX), _linesY(linesY) {
+
+}
+
+TxtResult::TxtResult(const TxtResult & src) : Result(src) {
+    if(&src == this) return;
+
+    _linesX = src._linesX;
+    _linesY = src._linesY;
+}
+
+TxtResult::~TxtResult() {
+
+}
+
+ostream & TxtResult::Print(ostream & os, bool verbose) const {
+    Result::Print(os);
+
+    if(verbose) {
+        os << endl << "Unique lines in " << _fileX << ": " << endl;
+        for(size_t i = 0; i < _linesX.size(); i++) {
+            os << _linesX[i] << endl;
+        }
+        
+        os << "Unique lines in " << _fileY << ": " << endl;
+        for(size_t i = 0; i < _linesY.size(); i++) {
+            os << _linesY[i] << endl;
+        }
+    }
+
+    return os;
+}
+
+// JsnResult
+JsnResult::JsnResult(const string & fileX, const string & fileY, bool result) : Result(fileX, fileY, result) {
+
+}
+
+JsnResult::JsnResult(const string & fileX, const string & fileY, bool result, vector<int> nodesX, vector<int> nodesY) 
+    : Result(fileX, fileY, result), _nodesX(nodesX), _nodesY(nodesY) {
+
+}
+
+JsnResult::JsnResult(const JsnResult & src) : Result(src) {
+    if(&src == this) return;
+
+    _nodesX = src._nodesX;
+    _nodesY = src._nodesY;
+}
+
+JsnResult::~JsnResult() {
+
+}
+
+ostream & JsnResult::Print(ostream & os, bool verbose) const {
+    Result::Print(os);
+
+    if(verbose) {
+        os << endl << "Unique nodes in " << _fileX << ": ";
+        for(size_t i = 0; i < _nodesX.size(); i++) {
+            os << _nodesX[i] << " ";
+        }
+        
+        os << endl << "Unique nodes in " << _fileY << ": ";
+        for(size_t i = 0; i < _nodesY.size(); i++) {
+            os << _nodesY[i] << " ";
+        }
+    }
+
+    os << endl;
+    return os;
 }
