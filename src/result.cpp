@@ -80,7 +80,7 @@ BinResult::~BinResult() {
 ostream & BinResult::Print(ostream & os, bool verbose) const {
     Result::Print(os);
 
-    if(verbose) {
+    if(verbose && !_result) {
         os << endl << "Unique bytes in " << _fileX << ": ";
         for(size_t i = 0; i < _bytesX.size(); i++) {
             os << _bytesX[i] << " ";
@@ -120,7 +120,7 @@ TxtResult::~TxtResult() {
 ostream & TxtResult::Print(ostream & os, bool verbose) const {
     Result::Print(os);
 
-    if(verbose) {
+    if(verbose && !_result) {
         os << endl << "Unique lines in " << _fileX << ": " << endl;
         for(size_t i = 0; i < _linesX.size(); i++) {
             os << _linesX[i] << endl;
@@ -131,7 +131,7 @@ ostream & TxtResult::Print(ostream & os, bool verbose) const {
             os << _linesY[i] << endl;
         }
     }
-
+    if(_result) os << endl;
     return os;
 }
 
@@ -159,7 +159,7 @@ JsnResult::~JsnResult() {
 ostream & JsnResult::Print(ostream & os, bool verbose) const {
     Result::Print(os);
 
-    if(verbose) {
+    if(verbose && !_result) {
         os << endl << "Unique nodes in " << _fileX << ": ";
         for(size_t i = 0; i < _nodesX.size(); i++) {
             os << _nodesX[i] << " ";

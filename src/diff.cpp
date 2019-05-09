@@ -77,12 +77,22 @@ Result * BinDiff::Compare(bool (*compareParts)(const string &, const string &)) 
     vector<uint8_t> bytesX = _first->GetBinary();
     vector<uint8_t> bytesY = _second->GetBinary();
 
-    if(bytesX.size() != bytesY.size()) return new BinResult(_first->GetFileName(), _second->GetFileName(), false);
-    for(size_t i = 0; i < bytesX.size(); i++) {
-        if(bytesX[i] != bytesY[i]) return new BinResult(_first->GetFileName(), _second->GetFileName(), false);
+    vector<uint8_t> ux;
+    vector<uint8_t> uy;
+
+    //if(bytesX.size() != bytesY.size()) return new BinResult(_first->GetFileName(), _second->GetFileName(), false);
+    size_t max = bytesX.size() > bytesY.size() ? bytesX.size() : bytesY.size();
+    size_t index;
+    bool res = true;
+    for(index = 0; index < max; index++) {
+        if(bytesX[index] != bytesY[index]) {
+            ux.push_back(bytesX[index]);
+            uy.push_back(bytesY[index]);
+            res = false;
+        }
     }
 
-    return new BinResult(_first->GetFileName(), _second->GetFileName(), true);
+    return new BinResult(_first->GetFileName(), _second->GetFileName(), res, ux, uy);
 }   
 
 ostream & operator<<(ostream & os, const BinDiff & src) {
