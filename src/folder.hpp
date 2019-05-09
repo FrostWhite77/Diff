@@ -1,6 +1,7 @@
 #pragma once
 
 #include "diff.hpp"
+#include "io.hpp"
 
 #include <vector>
 #include <sstream>
@@ -15,16 +16,15 @@ class Folder {
         Folder(const Folder & src);
         ~Folder();
 
-        std::vector<std::string> GetFilesInFolder();
+        std::vector<File *> GetFilesInFolder();
 
-        void CompareFolders(const Folder & f, Diff & diff);
+        void CompareFolders(const Folder & f);
         Result * CompareWithFile(const File & f, Diff & diff);
         bool IsInFolder(const std::string & file) const;
 
-        bool IsFile(std::string file) const;
-        bool IsDir(std::string file) const;
-
     private:
         std::string _folderName;
-        std::vector<std::string> _files;
+        std::vector<File *> _files;
 };
+
+Folder * CreateFolder(const std::string & filePath);

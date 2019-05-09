@@ -178,3 +178,23 @@ ostream & operator<<(ostream & os, const JsnDiff & src) {
 
     return os;
 }
+
+// non-member functions implementation
+Diff * CreateDiff(const string & fileA, const string & fileB, int comparisonType) {
+    int typeA = IO::GetFileType(fileA);
+    int typeB = IO::GetFileType(fileB);
+
+    if(comparisonType == -1 && typeA != typeB) return NULL;
+    comparisonType = comparisonType == -1 ? typeA : comparisonType;
+
+    switch(comparisonType) {
+        case 0:
+            return new BinDiff(*CreateFile(fileA), *CreateFile(fileB));
+        case 1:
+            return new TxtDiff(*CreateFile(fileA), *CreateFile(fileB));
+        case 2:
+            return new JsnDiff(*CreateFile(fileA), *CreateFile(fileB));
+        default:
+            return NULL;
+    }
+}

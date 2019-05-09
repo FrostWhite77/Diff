@@ -1,5 +1,7 @@
 #pragma once
 
+#include "io.hpp"
+
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -16,6 +18,8 @@ class File {
         virtual bool Load();
 
         std::string GetFileName() const;
+        std::string GetFilePath() const;
+        std::string GetFullFileName() const;
 
         virtual std::vector<uint8_t> GetBinary();
         virtual std::vector<std::string> GetText();
@@ -26,7 +30,11 @@ class File {
 
     protected:
         std::string _fileName;
+        std::string _filePath;
         bool _isLoaded;
+
+    private:
+        void ParseFileName(std::string arg);
 };
 
 class BinFile : public File {
@@ -94,3 +102,5 @@ class JsnFile : public File {
     private:
         std::vector<std::string> _nodes;
 };
+
+File * CreateFile(const std::string & filePath);

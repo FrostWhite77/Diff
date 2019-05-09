@@ -1,0 +1,7 @@
+diff.o: src/diff.cpp src/diff.hpp src/file.hpp src/result.hpp src/settings.hpp
+file.o: src/file.cpp src/file.hpp
+folder.o: src/folder.cpp src/folder.hpp src/diff.hpp src/file.hpp src/result.hpp src/settings.hpp
+io.o: src/io.cpp src/io.hpp
+main.o: src/main.cpp src/diff.hpp src/file.hpp src/result.hpp src/settings.hpp src/folder.hpp src/io.hpp
+result.o: src/result.cpp src/result.hpp
+settings.o: src/settings.cpp src/settings.hpp

@@ -4,11 +4,10 @@
 
 #include "diff.hpp"
 #include "folder.hpp"
-#include "IOContainer.hpp"
+#include "io.hpp"
 
 using namespace std;
 
-IOContainer GetIO(const string & fileName);
 File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
 bool Exists(const string path);
@@ -85,7 +84,7 @@ bool DifferentTypes = false;
 bool caseInsensitive = false;
 bool ignoreWhitespace = false;
 
-int main(int argc, char * argv[]) {   
+int main(int argc, char * argv[]) {       
     if(argc <= 2) {
         cout << "Invalid number of arguments!" << endl;
         return 1;
@@ -179,12 +178,6 @@ int main(int argc, char * argv[]) {
     if(diff != NULL) delete diff;
 
     return 0;
-}
-
-IOContainer GetIO(const string & fileName) {
-    File * x = GetFile(fileName);
-    Folder * y = x == NULL ? GetFolder(fileName) : NULL;
-    return IOContainer(x, y, x == NULL);
 }
 
 File * GetFile(const string & fileName) {

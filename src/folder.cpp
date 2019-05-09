@@ -13,48 +13,49 @@ Folder::Folder(const Folder & src) {
 }
 
 Folder::~Folder() {
-
+    for(size_t i = 0; i < _files.size(); i++) {
+        if(_files[i] != NULL) delete _files[i];
+    }
 }
 
-vector<string> Folder::GetFilesInFolder() {
-    vector<string> files;
+vector<File *> Folder::GetFilesInFolder() {
+    vector<File *> files;
     
     DIR * d = opendir(_folderName.c_str());
     struct dirent * dp;
 
     while ((dp = readdir(d)) != NULL) {
-        files.push_back(dp->d_name);
+        /*
+        if(string(dp->d_name) == "." || string(dp->d_name) == "..") continue;
+        if(Exists(dp->d_name)) {
+            switch(GetFileType(string(dp->d_name))) {
+                case 0:
+                    files.push_back(new BinFile(string(dp->d_name)));
+                    break;
+                case 1:
+                    files.push_back(new TxtFile(string(dp->d_name)));
+                    break;
+                case 2:
+                    files.push_back(new JsnFile(string(dp->d_name)));
+                    break;
+                default:
+                    break;
+            }
+        }
+        */
     }
+
     closedir(d);
-
-    if(find(files.begin(), _files.end(), ".") != files.end()) {
-        files.erase(find(files.begin(), files.end(), "."));
-    }
-    if(find(files.begin(), files.end(), "..") != files.end()) {
-        files.erase(find(files.begin(), files.end(), ".."));
-    }
-
     return files;
 }
 
-bool Folder::IsInFolder(const std::string & file) const {
-    return find(_files.begin(), _files.end(), file) != _files.end();
+bool Folder::IsInFolder(const string & file) const {
+    return false;
+    //return find(_files.begin(), _files.end(), file) != _files.end();
 }
 
-void Folder::CompareFolders(const Folder & f, Diff & diff) {
-    for(size_t i = 0; i < _files.size(); i++) {
-        if(f.IsInFolder(_files[i])) {
-            // compare files
-            diff.SetFirst(BinFile(_folderName + "/" + _files[i]));
-            diff.SetSecond(BinFile(f._folderName + "/" + _files[i]));
-            auto tmp = diff.Compare();
-            cout << _files[i] << " is in " << _folderName << " and in " << f._folderName << ", are equal: " << boolalpha << tmp->GetResult() << endl;
-            delete tmp;
-        }
-        else {
-            cout << _files[i] << " is in " << _folderName << " but not in " << f._folderName << endl;
-        }
-    }
+void Folder::CompareFolders(const Folder & f) {
+
 }
 
 Result * Folder::CompareWithFile(const File & f, Diff & diff) {
@@ -63,10 +64,8 @@ Result * Folder::CompareWithFile(const File & f, Diff & diff) {
     return new Result(f.GetFileName(), _folderName + "/" + f.GetFileName(), false);
 }
 
-bool Folder::IsFile(std::string file) const {
-    return !IsDir(file);
-}
-
-bool Folder::IsDir(std::string file) const {
-    return file.size() > 0 && file[file.size() - 1] == '/';
+// non-member functions implementation
+Folder * CreateFolder(const std::string & filePath) {
+    if(!IO::IsDir(filePath)) return NULL;
+    return new Folder(filePath);
 }

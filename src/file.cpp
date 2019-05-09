@@ -3,8 +3,8 @@
 using namespace std;
 
 // File
-File::File(string fileName) : _fileName(fileName), _isLoaded(false) {
-
+File::File(string fileName) : _isLoaded(false) {
+    ParseFileName(fileName);
 }
 
 File::File(const File & src) {
@@ -34,6 +34,14 @@ string File::GetFileName() const {
     return _fileName;
 }
 
+string File::GetFilePath() const {
+    return _filePath;
+}
+
+string File::GetFullFileName() const {
+    return _filePath + "/" + _fileName;
+}
+
 vector<uint8_t> File::GetBinary() {
     return vector<uint8_t>();
 }
@@ -53,6 +61,16 @@ ostream & File::Print(ostream & os) const {
 
 ostream & operator<<(ostream & os, const File & src) {
     return src.Print(os);
+}
+
+void File::ParseFileName(std::string arg) {
+    size_t lastIndexOfBackSlash = arg.size();
+    while(lastIndexOfBackSlash > 0) {
+        if(arg[lastIndexOfBackSlash] == '/') break;
+        lastIndexOfBackSlash--;
+    }
+    _filePath = string(arg.substr(0, lastIndexOfBackSlash));
+    _fileName = string(arg.substr(lastIndexOfBackSlash + 1, arg.size() - lastIndexOfBackSlash));
 }
 
 // BinFile
@@ -252,4 +270,18 @@ ostream & JsnFile::Print(ostream & os) const {
 
 ostream & operator<<(ostream & os, const JsnFile & src) {
     return src.Print(os);
+}
+
+// other
+File * CreateFile(const std::string & filePath) {
+    switch(IO::GetFileType(filePath)) {
+        case 0:
+            return new BinFile(filePath);
+        case 1:
+            return new TxtFile(filePath);
+        case 2:
+            return new JsnFile(filePath);
+        default:
+            return NULL;
+    }
 }

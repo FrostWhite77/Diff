@@ -3,6 +3,7 @@
 #include "file.hpp"
 #include "result.hpp"
 #include "settings.hpp"
+#include "io.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -60,3 +61,5 @@ class JsnDiff : public Diff {
 
         friend std::ostream & operator<<(std::ostream & os, const JsnDiff & src);
 };
+
+Diff * CreateDiff(const std::string & fileA, const std::string & fileB, int comparisonType = -1);
