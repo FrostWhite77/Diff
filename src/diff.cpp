@@ -116,7 +116,7 @@ TxtDiff::~TxtDiff() {
 
 }
 
-Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) {
+Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) {   
     vector<string> linesX = _first->GetText();
     vector<string> linesY = _second->GetText();
 

@@ -11,6 +11,7 @@ File::File(const File & src) {
     if(&src == this) return;
 
     _fileName = src._fileName;
+    _filePath = src._filePath;
     _isLoaded = src._isLoaded;
 }
 
@@ -99,7 +100,7 @@ size_t BinFile::GetFileSize() const {
 bool BinFile::Load() {
     if(_isLoaded) return true;  
 
-    ifstream f(_fileName);
+    ifstream f(_filePath + "/" + _fileName);
     if(!f.is_open() || f.bad()) return false;
 
     uint8_t byte;
@@ -177,7 +178,7 @@ size_t TxtFile::GetFileSize() const {
 }
 
 bool TxtFile::Load() {
-    ifstream f(_fileName);
+    ifstream f(_filePath + "/" + _fileName);
     if(!f.is_open() || f.bad()) return false;
 
     string line;
@@ -274,6 +275,7 @@ ostream & operator<<(ostream & os, const JsnFile & src) {
 
 // other
 File * CreateFile(const std::string & filePath) {
+    if(!IO::IsFile(filePath)) return NULL;
     switch(IO::GetFileType(filePath)) {
         case 0:
             return new BinFile(filePath);

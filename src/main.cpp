@@ -10,7 +10,7 @@ using namespace std;
 
 File * GetFile(const string & fileName);
 Folder * GetFolder(const string & fileName);
-bool Exists(const string path);
+bool IO::Exists(const string path);
 void SetCompareType(int type);
 
 bool lineCmpIncase(const string & ll, const string & lr) {
@@ -92,19 +92,23 @@ int main(int argc, char * argv[]) {
 
     vector<File *> files;
     vector<Folder *> folders;
+    vector<int> fileTypes;
 
     size_t i = 0;
     for(i = 1; i < (size_t)argc && i < 3; i++) {
         string current(argv[i]);
         
-        auto file = GetFile(current);
+        //auto file = GetFile(current);
+        File * file = CreateFile(current);
         if(file != NULL) {
             files.push_back(file);
+            fileTypes.push_back(IO::GetFileType(current));
             //cout << argv[i] << " -> is file!" << endl;
             continue;
         }
 
-        auto folder = GetFolder(current);
+        //auto folder = GetFolder(current);
+        Folder * folder = CreateFolder(current);
         if(file != NULL) {
             folders.push_back(folder);
             //cout << argv[i] << " -> is folder!" << endl;
@@ -119,13 +123,17 @@ int main(int argc, char * argv[]) {
         return 1;   
     }
 
+    cout << "fileTypes: ";
+    for(auto i : fileTypes) cout << i << " ";
+    cout << endl;
+
     for(i = i; i < (size_t)argc; i++) {
         if(string(argv[i]) == "-i" && CompareType == 1) {
-            //cout << "switched to case insenstivite comparison" << endl;
+            cout << "switched to case insenstivite comparison" << endl;
             ignoreWhitespace = true;
         }
         else if(string(argv[i]) == "-c" && CompareType == 1) {
-            //cout << "switched to case insenstivite comparison" << endl;
+            cout << "switched to case insenstivite comparison" << endl;
             caseInsensitive = true;
         }
         else {
@@ -144,6 +152,7 @@ int main(int argc, char * argv[]) {
     Diff * diff = NULL;
     if(files.size() == 2)
     {
+        /*
         switch(CompareType)
         {
             case 0:
@@ -155,7 +164,10 @@ int main(int argc, char * argv[]) {
             case 2:
                 diff = new JsnDiff(*files[0], *files[1]);
                 break;
-        }
+        }*/
+
+        diff = CreateDiff((*files[0]).GetFullFileName(), (*files[1]).GetFullFileName());
+        if(diff == NULL) return 1;
 
         bool (*func)(const string &, const string &) = NULL;
         if(caseInsensitive && ignoreWhitespace) {
@@ -166,6 +178,10 @@ int main(int argc, char * argv[]) {
         }
         else if(ignoreWhitespace) {
             func = compareIgnored;
+        }
+
+        if(func == NULL) {
+            cout << "cmp func is null" << endl;
         }
 
         auto result = diff->Compare(func); 
@@ -183,17 +199,17 @@ int main(int argc, char * argv[]) {
 File * GetFile(const string & fileName) {
     // is binary file
     size_t position = 0;
-    if((position = fileName.find(".bin")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+    if((position = fileName.find(".bin")) != string::npos && position + 4 == fileName.size() && IO::Exists(fileName)) {
         SetCompareType(0);
         return new BinFile(fileName);
     }
     // is text file
-    else if((position = fileName.find(".txt")) != string::npos && position + 4 == fileName.size() && Exists(fileName)) {
+    else if((position = fileName.find(".txt")) != string::npos && position + 4 == fileName.size() && IO::Exists(fileName)) {
         SetCompareType(1);
         return new TxtFile(fileName);
     }
     // is json file
-    else if((position = fileName.find(".json")) != string::npos && position + 5 == fileName.size() && Exists(fileName)) {
+    else if((position = fileName.find(".json")) != string::npos && position + 5 == fileName.size() && IO::Exists(fileName)) {
         SetCompareType(2);
         return new JsnFile(fileName);
     }
@@ -203,15 +219,10 @@ File * GetFile(const string & fileName) {
 }
 
 Folder * GetFolder(const string & fileName) {
-    if(Exists(fileName)) {
+    if(IO::Exists(fileName)) {
         return new Folder(fileName);
     }
     return NULL;
-}
-
-bool Exists(const string path) {
-    ifstream ifs(path.c_str());
-    return ifs.good();    
 }
 
 void SetCompareType(int type) {
