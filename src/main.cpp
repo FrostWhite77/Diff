@@ -24,7 +24,7 @@ bool lineCmpIncase(const string & ll, const string & lr) {
     return true;
 }
 
-int compareIgnored(const string & ll, const string & lr) {
+bool compareIgnored(const string & ll, const string & lr) {
 
     const char * l = ll.c_str();
     const char * r = lr.c_str();
@@ -33,10 +33,10 @@ int compareIgnored(const string & ll, const string & lr) {
         while (*l != '\0' && isspace((unsigned char)*l)) l++;
         while (*r != '\0' && isspace((unsigned char)*r)) r++;
         if (*l == '\0' || *r == '\0') {
-          return (*r == '\0') - (*l == '\0');
+          return (*r == '\0') - (*l == '\0') == 0;
         }
         if (*l != *r) {
-          return (unsigned char)*r - (unsigned char)*l;
+          return (unsigned char)*r - (unsigned char)*l == 0;
         }
         l++;
         r++;
@@ -45,7 +45,7 @@ int compareIgnored(const string & ll, const string & lr) {
     return 0;
 }
 
-int compareIgnCaseIns(const string & ll, const string & lr) {
+bool compareIgnCaseIns(const string & ll, const string & lr) {
     const char * l = ll.c_str();
     const char * r = lr.c_str();
 
@@ -53,10 +53,10 @@ int compareIgnCaseIns(const string & ll, const string & lr) {
         while (*l != '\0' && isspace((unsigned char)*l)) l++;
         while (*r != '\0' && isspace((unsigned char)*r)) r++;
         if (*l == '\0' || *r == '\0') {
-          return (*r == '\0') - (*l == '\0');
+          return (*r == '\0') - (*l == '\0') == 0;
         }
         if (toupper(*l) != toupper(*r)) {
-          return (unsigned char)*r - (unsigned char)*l;
+          return (unsigned char)*r - (unsigned char)*l == 0;
         }
         l++;
         r++;
@@ -112,19 +112,30 @@ int main(int argc, char * argv[]) {
             continue;
         }
 
-        cout << argv[i] << " -> not an IO Object!" << endl;
+        cout << "Error: Can't load " << argv[i] << ". Are you sure, it's a corrent path?" << endl;
+
+        for(auto f : files) delete f;
+        for(auto f : folders) delete f;
+
+        return 1;   
     }
-
-
 
     for(i = i; i < (size_t)argc; i++) {
         if(string(argv[i]) == "-i" && CompareType == 1) {
             //cout << "switched to case insenstivite comparison" << endl;
             ignoreWhitespace = true;
         }
-        if(string(argv[i]) == "-c" && CompareType == 1) {
+        else if(string(argv[i]) == "-c" && CompareType == 1) {
             //cout << "switched to case insenstivite comparison" << endl;
             caseInsensitive = true;
+        }
+        else {
+            cout << "Invalid argument: " << argv[i] << ", possible arguments: -c: case insensitive, -i: ignore whitespace" << endl;
+
+            for(auto f : files) delete f;
+            for(auto f : folders) delete f;
+
+            return 1;
         }
     }
 
@@ -149,17 +160,21 @@ int main(int argc, char * argv[]) {
 
         bool (*func)(const string &, const string &) = NULL;
         if(caseInsensitive && ignoreWhitespace) {
-            func = lineCmpWthIgnCaseIns;
+            func = compareIgnCaseIns;
         }
         else if(caseInsensitive) {
             func = lineCmpIncase;
         }
         else if(ignoreWhitespace) {
-            func = lineCmpWhtIgn;
+            func = compareIgnored;
         }
 
         cout << diff->Compare(func) << endl;
     }    
+
+    for(auto f : files) delete f;
+    for(auto f : folders) delete f;
+    if(diff != NULL) delete diff;
 
     return 0;
 }
