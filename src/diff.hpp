@@ -62,4 +62,4 @@ class JsnDiff : public Diff {
         friend std::ostream & operator<<(std::ostream & os, const JsnDiff & src);
 };
 
-Diff * CreateDiff(const std::string & fileA, const std::string & fileB, int comparisonType = -1);
+Diff * CreateDiff(const File * a, const File * b, int comparisonType = -1);

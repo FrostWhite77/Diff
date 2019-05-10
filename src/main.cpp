@@ -8,11 +8,6 @@
 
 using namespace std;
 
-File * GetFile(const string & fileName);
-Folder * GetFolder(const string & fileName);
-bool IO::Exists(const string path);
-void SetCompareType(int type);
-
 bool lineCmpIncase(const string & ll, const string & lr) {
     if(ll.size() != lr.size()) return false;
     for(size_t i = 0; i < ll.size(); i++) {
@@ -85,33 +80,27 @@ bool caseInsensitive = false;
 bool ignoreWhitespace = false;
 
 int main(int argc, char * argv[]) {       
-    if(argc <= 2) {
+        if(argc <= 2) {
         cout << "Invalid number of arguments!" << endl;
         return 1;
     }
 
     vector<File *> files;
     vector<Folder *> folders;
-    vector<int> fileTypes;
-
+    
     size_t i = 0;
     for(i = 1; i < (size_t)argc && i < 3; i++) {
         string current(argv[i]);
         
-        //auto file = GetFile(current);
         File * file = CreateFile(current);
         if(file != NULL) {
             files.push_back(file);
-            fileTypes.push_back(IO::GetFileType(current));
-            //cout << argv[i] << " -> is file!" << endl;
             continue;
         }
 
-        //auto folder = GetFolder(current);
         Folder * folder = CreateFolder(current);
         if(file != NULL) {
             folders.push_back(folder);
-            //cout << argv[i] << " -> is folder!" << endl;
             continue;
         }
 
@@ -123,17 +112,13 @@ int main(int argc, char * argv[]) {
         return 1;   
     }
 
-    cout << "fileTypes: ";
-    for(auto i : fileTypes) cout << i << " ";
-    cout << endl;
-
     for(i = i; i < (size_t)argc; i++) {
-        if(string(argv[i]) == "-i" && CompareType == 1) {
-            cout << "switched to case insenstivite comparison" << endl;
+        if(string(argv[i]) == "-i") {
+            //cout << "switched to case insenstivite comparison" << endl;
             ignoreWhitespace = true;
         }
-        else if(string(argv[i]) == "-c" && CompareType == 1) {
-            cout << "switched to case insenstivite comparison" << endl;
+        else if(string(argv[i]) == "-c") {
+            //cout << "switched to case insenstivite comparison" << endl;
             caseInsensitive = true;
         }
         else {
@@ -166,7 +151,7 @@ int main(int argc, char * argv[]) {
                 break;
         }*/
 
-        diff = CreateDiff((*files[0]).GetFullFileName(), (*files[1]).GetFullFileName());
+        diff = CreateDiff(files[0], files[1]);
         if(diff == NULL) return 1;
 
         bool (*func)(const string &, const string &) = NULL;
@@ -180,60 +165,20 @@ int main(int argc, char * argv[]) {
             func = compareIgnored;
         }
 
-        if(func == NULL) {
-            cout << "cmp func is null" << endl;
-        }
-
         auto result = diff->Compare(func); 
         result->Print(cout, true);
         delete result;
-    }    
+    }
 
-    for(auto f : files) delete f;
-    for(auto f : folders) delete f;
+    for(size_t i = 0; i < files.size(); i++) {
+        delete files[i];
+    }
+    for(size_t i = 0; i < folders.size(); i++) {
+        delete folders[i];
+    }
     if(diff != NULL) delete diff;
 
     return 0;
-}
 
-File * GetFile(const string & fileName) {
-    // is binary file
-    size_t position = 0;
-    if((position = fileName.find(".bin")) != string::npos && position + 4 == fileName.size() && IO::Exists(fileName)) {
-        SetCompareType(0);
-        return new BinFile(fileName);
-    }
-    // is text file
-    else if((position = fileName.find(".txt")) != string::npos && position + 4 == fileName.size() && IO::Exists(fileName)) {
-        SetCompareType(1);
-        return new TxtFile(fileName);
-    }
-    // is json file
-    else if((position = fileName.find(".json")) != string::npos && position + 5 == fileName.size() && IO::Exists(fileName)) {
-        SetCompareType(2);
-        return new JsnFile(fileName);
-    }
-    else {
-        return NULL;
-    }
-}
-
-Folder * GetFolder(const string & fileName) {
-    if(IO::Exists(fileName)) {
-        return new Folder(fileName);
-    }
-    return NULL;
-}
-
-void SetCompareType(int type) {
-    if(CompareType == -1) {
-        CompareType = type;
-        return;
-    }
-
-    if(CompareType == type) {
-        return;
-    } 
-
-    DifferentTypes = true;
+    return 0;
 }

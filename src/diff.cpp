@@ -80,8 +80,7 @@ Result * BinDiff::Compare(bool (*compareParts)(const string &, const string &)) 
     vector<uint8_t> ux;
     vector<uint8_t> uy;
 
-    //if(bytesX.size() != bytesY.size()) return new BinResult(_first->GetFileName(), _second->GetFileName(), false);
-    size_t max = bytesX.size() > bytesY.size() ? bytesX.size() : bytesY.size();
+    size_t max = bytesX.size() > bytesY.size() ? bytesY.size() : bytesX.size();
     size_t index;
     bool res = true;
     for(index = 0; index < max; index++) {
@@ -180,20 +179,20 @@ ostream & operator<<(ostream & os, const JsnDiff & src) {
 }
 
 // non-member functions implementation
-Diff * CreateDiff(const string & fileA, const string & fileB, int comparisonType) {
-    int typeA = IO::GetFileType(fileA);
-    int typeB = IO::GetFileType(fileB);
+Diff * CreateDiff(const File * a, const File * b, int comparisonType) {
+    int typeA = IO::GetFileType(a->GetFullFileName());
+    int typeB = IO::GetFileType(b->GetFullFileName());
 
     if(comparisonType == -1 && typeA != typeB) return NULL;
     comparisonType = comparisonType == -1 ? typeA : comparisonType;
 
     switch(comparisonType) {
         case 0:
-            return new BinDiff(*CreateFile(fileA), *CreateFile(fileB));
+            return new BinDiff(*a, *b);
         case 1:
-            return new TxtDiff(*CreateFile(fileA), *CreateFile(fileB));
+            return new TxtDiff(*a, *b);
         case 2:
-            return new JsnDiff(*CreateFile(fileA), *CreateFile(fileB));
+            return new JsnDiff(*a, *b);
         default:
             return NULL;
     }
