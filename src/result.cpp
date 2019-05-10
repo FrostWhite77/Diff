@@ -92,7 +92,7 @@ ostream & BinResult::Print(ostream & os, bool verbose) const {
         }
     }
 
-    os << endl;
+    if(!_result) os << endl;
     return os;
 }
 

@@ -76,19 +76,27 @@ BinDiff::~BinDiff() {
 Result * BinDiff::Compare(bool (*compareParts)(const string &, const string &)) {
     vector<uint8_t> bytesX = _first->GetBinary();
     vector<uint8_t> bytesY = _second->GetBinary();
-
     vector<uint8_t> ux;
     vector<uint8_t> uy;
 
-    size_t max = bytesX.size() > bytesY.size() ? bytesY.size() : bytesX.size();
+    size_t min = bytesX.size() > bytesY.size() ? bytesY.size() : bytesX.size();
     size_t index;
     bool res = true;
-    for(index = 0; index < max; index++) {
+    for(index = 0; index < min; index++) {
         if(bytesX[index] != bytesY[index]) {
             ux.push_back(bytesX[index]);
             uy.push_back(bytesY[index]);
             res = false;
         }
+    }
+
+    for(size_t i = index; i < bytesX.size(); i++) {
+        ux.push_back(bytesX[i]);
+        res = false;
+    }
+    for(size_t i = index; i < bytesY.size(); i++) {
+        uy.push_back(bytesY[i]);
+        res = false;
     }
 
     return new BinResult(_first->GetFileName(), _second->GetFileName(), res, ux, uy);
@@ -118,28 +126,37 @@ TxtDiff::~TxtDiff() {
 Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) {   
     vector<string> linesX = _first->GetText();
     vector<string> linesY = _second->GetText();
-
     vector<string> uniqX;
     vector<string> uniqY;
     
+    size_t min = linesX.size() > linesY.size() ? linesY.size() : linesX.size();
+    size_t index;
     bool res = true;
 
-    if(linesX.size() != linesY.size()) return new TxtResult(_first->GetFileName(), _second->GetFileName(), false);
-    for(size_t i = 0; i < linesX.size(); i++) {
+    for(index = 0; index < min; index++) {
         if(compareParts != NULL) {
-            if(!compareParts(linesX[i], linesY[i])) {
-                uniqX.push_back(linesX[i]);
-                uniqY.push_back(linesY[i]);
+            if(!compareParts(linesX[index], linesY[index])) {
+                uniqX.push_back(linesX[index]);
+                uniqY.push_back(linesY[index]);
                 res = false;
             }
         }
         else {
-            if(linesX[i] != linesY[i]) {
-                uniqX.push_back(linesX[i]);
-                uniqY.push_back(linesY[i]);
+            if(linesX[index] != linesY[index]) {
+                uniqX.push_back(linesX[index]);
+                uniqY.push_back(linesY[index]);
                 res = false;
             }
         }
+    }
+
+    for(size_t i = index; i < linesX.size(); i++) {
+        uniqX.push_back(linesX[i]);
+        res = false;
+    }
+    for(size_t i = index; i < linesY.size(); i++) {
+        uniqY.push_back(linesY[i]);
+        res = false;
     }
 
     return new TxtResult(_first->GetFileName(), _second->GetFileName(), res, uniqX, uniqY);
@@ -180,6 +197,8 @@ ostream & operator<<(ostream & os, const JsnDiff & src) {
 
 // non-member functions implementation
 Diff * CreateDiff(const File * a, const File * b, int comparisonType) {
+    if(a == NULL || b == NULL) return NULL;
+    
     int typeA = IO::GetFileType(a->GetFullFileName());
     int typeB = IO::GetFileType(b->GetFullFileName());
 

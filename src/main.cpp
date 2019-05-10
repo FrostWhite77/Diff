@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d = NULL);
+
 bool lineCmpIncase(const string & ll, const string & lr) {
     if(ll.size() != lr.size()) return false;
     for(size_t i = 0; i < ll.size(); i++) {
@@ -99,16 +101,13 @@ int main(int argc, char * argv[]) {
         }
 
         Folder * folder = CreateFolder(current);
-        if(file != NULL) {
+        if(folder != NULL) {
             folders.push_back(folder);
             continue;
         }
 
         cout << "Error: Can't load " << argv[i] << ". Are you sure, it's a corrent path?" << endl;
-
-        for(auto f : files) delete f;
-        for(auto f : folders) delete f;
-
+        FreeAll(files, folders);
         return 1;   
     }
 
@@ -123,62 +122,46 @@ int main(int argc, char * argv[]) {
         }
         else {
             cout << "Invalid argument: " << argv[i] << ", possible arguments: -c: case insensitive, -i: ignore whitespace" << endl;
-
-            for(auto f : files) delete f;
-            for(auto f : folders) delete f;
-
+            FreeAll(files, folders);
             return 1;
         }
     }
 
-    //cout << "CompareType: " << CompareType << " // 0:bin, 1:txt, 2:jsn" << endl;
-    //cout << "DifferentTypes: " << boolalpha << DifferentTypes << endl;
-
     Diff * diff = NULL;
     if(files.size() == 2)
     {
-        /*
-        switch(CompareType)
-        {
-            case 0:
-                diff = new BinDiff(*files[0], *files[1]);
-                break;
-            case 1:
-                diff = new TxtDiff(*files[0], *files[1]);
-                break;
-            case 2:
-                diff = new JsnDiff(*files[0], *files[1]);
-                break;
-        }*/
-
         diff = CreateDiff(files[0], files[1]);
-        if(diff == NULL) return 1;
+        if(diff == NULL) {
+            FreeAll(files, folders);
+            return 1;
+        }
 
         bool (*func)(const string &, const string &) = NULL;
-        if(caseInsensitive && ignoreWhitespace) {
-            func = compareIgnCaseIns;
-        }
-        else if(caseInsensitive) {
-            func = lineCmpIncase;
-        }
-        else if(ignoreWhitespace) {
-            func = compareIgnored;
-        }
+        if(caseInsensitive && ignoreWhitespace) func = compareIgnCaseIns;
+        else if(caseInsensitive) func = lineCmpIncase;
+        else if(ignoreWhitespace) func = compareIgnored;
 
         auto result = diff->Compare(func); 
         result->Print(cout, true);
         delete result;
     }
-
-    for(size_t i = 0; i < files.size(); i++) {
-        delete files[i];
+    else if(files.size() == 1 && folders.size() == 1) {
+        Result * result = folders[0]->CompareWithFile(files[0]);
+        result->Print(cout, true);
+        cout << endl;
+        delete result;
     }
-    for(size_t i = 0; i < folders.size(); i++) {
-        delete folders[i];
+
+    FreeAll(files, folders, diff);
+    return 0;
+}
+
+void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d) {
+    for(size_t i = 0; i < fi.size(); i++) {
+        delete fi[i];
     }
-    if(diff != NULL) delete diff;
-
-    return 0;
-
-    return 0;
+    for(size_t i = 0; i < fo.size(); i++) {
+        delete fo[i];
+    }
+    if(d != NULL) delete d;
 }
