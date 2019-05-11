@@ -52,8 +52,38 @@ File * Folder::IsInFolder(const string & fileName) const {
     return NULL;
 }
 
-void Folder::CompareFolders(const Folder & f) {
+Result * Folder::CompareFolders(Folder * f) {
+    vector<string> ufx, ufy;
+    vector<Result *> results;
+    bool res = true;
 
+    Diff * d = NULL;
+    File * a = NULL, * b = NULL;
+
+    for(size_t i = 0; i < _files.size(); i++) {
+        if((b = f->IsInFolder(_files[i]->GetFileName())) == NULL) {
+            ufx.push_back(_files[i]->GetFileName());
+            res = false;
+        }
+        else {
+            a = _files[i];
+            d = CreateDiff(a, b);
+
+            Result * tmp = d->Compare();
+            if(!tmp->GetResult()) res = false;
+            results.push_back(tmp);
+
+            delete d;
+        }
+    }
+    for(size_t i = 0; i < f->_files.size(); i++) {
+        if(IsInFolder(f->_files[i]->GetFileName()) == NULL) {
+            ufy.push_back(f->_files[i]->GetFileName());
+            res = false;
+        }      
+    }
+
+    return new FolderResult(_folderName, f->_folderName, res, results, ufx, ufy);
 }
 
 Result * Folder::CompareWithFile(File * f) {

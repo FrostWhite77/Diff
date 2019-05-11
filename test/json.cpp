@@ -67,6 +67,10 @@ class CNode {
         vector<CNode *> _nodes;
 };
 
+bool ParseString(string toParse, vector<pair<string, string> > & pairs) {
+    
+} 
+
 CNode * ReadNode(ifstream & ifs) {
     string part;
     ifs.get();

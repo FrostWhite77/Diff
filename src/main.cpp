@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d = NULL);
+void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d = NULL, Result * result = NULL);
 
 bool lineCmpIncase(const string & ll, const string & lr) {
     if(ll.size() != lr.size()) return false;
@@ -128,6 +128,7 @@ int main(int argc, char * argv[]) {
     }
 
     Diff * diff = NULL;
+    Result * result = NULL;
     if(files.size() == 2)
     {
         diff = CreateDiff(files[0], files[1]);
@@ -141,22 +142,24 @@ int main(int argc, char * argv[]) {
         else if(caseInsensitive) func = lineCmpIncase;
         else if(ignoreWhitespace) func = compareIgnored;
 
-        auto result = diff->Compare(func); 
+        result = diff->Compare(func); 
         result->Print(cout, true);
-        delete result;
     }
     else if(files.size() == 1 && folders.size() == 1) {
-        Result * result = folders[0]->CompareWithFile(files[0]);
+        result = folders[0]->CompareWithFile(files[0]);
         result->Print(cout, true);
         cout << endl;
-        delete result;
+    }
+    else if(folders.size() == 2) {
+        result = folders[0]->CompareFolders(folders[1]);
+        result->Print(cout, true);
     }
 
-    FreeAll(files, folders, diff);
+    FreeAll(files, folders, diff, result);
     return 0;
 }
 
-void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d) {
+void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d, Result * result) {
     for(size_t i = 0; i < fi.size(); i++) {
         delete fi[i];
     }
@@ -164,4 +167,5 @@ void FreeAll(vector<File *> fi, vector<Folder *> fo, Diff * d) {
         delete fo[i];
     }
     if(d != NULL) delete d;
+    if(result != NULL) delete result;
 }

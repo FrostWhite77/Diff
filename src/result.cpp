@@ -19,6 +19,10 @@ Result::~Result() {
 
 }
 
+Result * Result::Clone() const {
+    return new Result(*this);
+}
+
 bool Result::GetResult() const {
     return _result;
 }   
@@ -77,6 +81,10 @@ BinResult::~BinResult() {
 
 }
 
+Result * BinResult::Clone() const {
+    return new BinResult(*this);
+}
+
 ostream & BinResult::Print(ostream & os, bool verbose) const {
     Result::Print(os);
 
@@ -117,18 +125,26 @@ TxtResult::~TxtResult() {
 
 }
 
+Result * TxtResult::Clone() const {
+    return new TxtResult(*this);
+}
+
 ostream & TxtResult::Print(ostream & os, bool verbose) const {
     Result::Print(os);
 
     if(verbose && !_result) {
-        os << endl << "Unique lines in " << _fileX << ": " << endl;
-        for(size_t i = 0; i < _linesX.size(); i++) {
-            os << _linesX[i] << endl;
+        if(_linesX.size() > 0) {
+            os << endl << "Unique lines in " << _fileX << ": " << endl;
+            for(size_t i = 0; i < _linesX.size(); i++) {
+                os << _linesX[i] << endl;
+            }
         }
-        
-        os << "Unique lines in " << _fileY << ": " << endl;
-        for(size_t i = 0; i < _linesY.size(); i++) {
-            os << _linesY[i] << endl;
+
+        if(_linesY.size() > 0) {
+            os << endl << "Unique lines in " << _fileY << ": " << endl;
+            for(size_t i = 0; i < _linesY.size(); i++) {
+                os << _linesY[i] << endl;
+            }
         }
     }
     if(_result) os << endl;
@@ -154,6 +170,10 @@ JsnResult::JsnResult(const JsnResult & src) : Result(src) {
 
 JsnResult::~JsnResult() {
 
+}
+
+Result * JsnResult::Clone() const {
+    return new JsnResult(*this);
 }
 
 ostream & JsnResult::Print(ostream & os, bool verbose) const {
@@ -188,6 +208,10 @@ FileFolderResult::~FileFolderResult() {
     if(_filesCompareResult != NULL) delete _filesCompareResult;
 }
 
+Result * FileFolderResult::Clone() const {
+    return new FileFolderResult(*this);
+}
+
 ostream & FileFolderResult::Print(std::ostream & os, bool verbose) const {
     os << "File " << _fileY << (_filesCompareResult == NULL ? " wasn't " : " was ") << "found in the folder " << _fileX;
 
@@ -195,5 +219,66 @@ ostream & FileFolderResult::Print(std::ostream & os, bool verbose) const {
         os << endl;
         _filesCompareResult->Print(os, verbose);
     }
+    return os;
+}
+
+// FolderResult
+FolderResult::FolderResult(const string & folder, const string & file, bool result, vector<Result *> results, vector<string> uFilesX, vector<string> uFilesY) : Result(folder, file, result), _results(results), _uFilesX(uFilesX), _uFilesY(uFilesY) {
+
+}
+
+FolderResult::FolderResult(const FolderResult & src) : Result(src) {
+    if(&src == this) return;
+
+    _uFilesX = src._uFilesX;
+    _uFilesY = src._uFilesY;
+
+    for(size_t i = 0; i < _results.size(); i++) {
+        delete _results[i];
+    }
+    for(size_t i = 0; i < src._results.size(); i++) {
+        _results.push_back(src._results[i]->Clone());
+    }
+}
+
+FolderResult::~FolderResult() {
+    for(size_t i = 0; i < _results.size(); i++) {
+        delete _results[i];
+    }
+}
+
+Result * FolderResult::Clone() const {
+    return new FolderResult(*this);
+}
+
+ostream & FolderResult::Print(std::ostream & os, bool verbose) const {
+    os << "Folder " << _fileX << " and folder " << _fileY << " are" << (_result ? "" : " not") << " same." << endl;
+    
+    if(!_result && verbose) {
+        if(_uFilesX.size() > 0) {
+            os << endl << "Unique files in " << _fileX << ": ";
+            for(size_t i = 0; i < _uFilesX.size(); i++) {
+                if(i == 0) os << _uFilesX[i];
+                else os << ", " << _uFilesX[i];
+            }
+            os << endl;
+        }
+        if(_uFilesY.size() > 0) {
+            os << endl << "Unique files in " << _fileY << ": ";
+            for(size_t i = 0; i < _uFilesY.size(); i++) {
+                if(i == 0) os << _uFilesY[i];
+                else os << ", " << _uFilesY[i];
+            }
+            os << endl;
+        }
+
+        if(_results.size() > 0) {
+            os << endl << "Files in both folders: " << endl;
+            for(size_t i = 0; i < _results.size(); i++) {
+                _results[i]->Print(os, true);
+            }
+        }
+    }
+
     return os;
 }

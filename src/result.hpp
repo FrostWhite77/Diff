@@ -9,6 +9,8 @@ class Result {
         Result(const Result & src);
         virtual ~Result();
 
+        virtual Result * Clone() const;
+
         bool GetResult() const;
 
         virtual std::vector<uint8_t> GetUniqueXBytes() const;
@@ -36,6 +38,8 @@ class BinResult : public Result {
         BinResult(const BinResult & src);
         virtual ~BinResult();
 
+        virtual Result * Clone() const;
+
         virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
 
     private:
@@ -49,6 +53,8 @@ class TxtResult : public Result {
         TxtResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<std::string> linesX, std::vector<std::string> linesY);
         TxtResult(const TxtResult & src);
         virtual ~TxtResult();
+
+        virtual Result * Clone() const;
 
         virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
 
@@ -64,6 +70,8 @@ class JsnResult : public Result {
         JsnResult(const JsnResult & src);
         virtual ~JsnResult();
 
+        virtual Result * Clone() const;
+
         virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
 
     private:
@@ -77,8 +85,27 @@ class FileFolderResult : public Result {
         FileFolderResult(const FileFolderResult & src);
         virtual ~FileFolderResult();
 
+        virtual Result * Clone() const;
+
         virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
     
     private:
         Result * _filesCompareResult;
+};
+
+class FolderResult : public Result {
+    public:
+        FolderResult(const std::string & folderX, const std::string & foldery, bool result, std::vector<Result *> results, std::vector<std::string> uFilesX, std::vector<std::string> uFilesY);
+        FolderResult(const FolderResult & src);
+        virtual ~FolderResult();
+
+        virtual Result * Clone() const;
+
+        virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
+
+    private:
+        std::vector<Result *> _results;
+
+        std::vector<std::string> _uFilesX;
+        std::vector<std::string> _uFilesY;
 };
