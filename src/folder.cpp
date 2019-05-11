@@ -63,16 +63,16 @@ Result * Folder::CompareWithFile(File * f) {
     if(folderFile == NULL || diff == NULL) {
         if(folderFile == NULL) delete folderFile;
         if(diff == NULL) delete diff;
-        return new Result(f->GetFileName(), _folderName, false);
+        return new FileFolderResult(_folderName, f->GetFullFileName(), NULL);
     }
 
     Result * result = diff->Compare();
     delete diff;
-    return result;
+    return new FileFolderResult(_folderName, f->GetFullFileName(), result);
 }
 
 // non-member functions implementation
-Folder * CreateFolder(const std::string & filePath) {
+Folder * CreateFolder(const string & filePath) {
     if(!IO::IsDir(filePath)) return NULL;
     return new Folder(filePath);
 }

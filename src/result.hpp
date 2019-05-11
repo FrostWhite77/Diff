@@ -70,3 +70,15 @@ class JsnResult : public Result {
         std::vector<int> _nodesX;
         std::vector<int> _nodesY;
 };
+
+class FileFolderResult : public Result {
+    public:
+        FileFolderResult(const std::string & fileX, const std::string & fileY, Result * filesCompareResult);
+        FileFolderResult(const FileFolderResult & src);
+        virtual ~FileFolderResult();
+
+        virtual std::ostream & Print(std::ostream & os, bool verbose = false) const;
+    
+    private:
+        Result * _filesCompareResult;
+};

@@ -174,3 +174,26 @@ ostream & JsnResult::Print(ostream & os, bool verbose) const {
     os << endl;
     return os;
 }
+
+// FileFolderResult
+FileFolderResult::FileFolderResult(const string & folder, const string & file, Result * filesCompareResult) : Result(folder, file, filesCompareResult != NULL), _filesCompareResult(filesCompareResult) {
+
+}
+
+FileFolderResult::FileFolderResult(const FileFolderResult & src) : Result(src) {
+    if(&src == this) return;
+}
+
+FileFolderResult::~FileFolderResult() {
+    if(_filesCompareResult != NULL) delete _filesCompareResult;
+}
+
+ostream & FileFolderResult::Print(std::ostream & os, bool verbose) const {
+    os << "File " << _fileY << (_filesCompareResult == NULL ? " wasn't " : " was ") << "found in the folder " << _fileX;
+
+    if(_filesCompareResult != NULL) {
+        os << endl;
+        _filesCompareResult->Print(os, verbose);
+    }
+    return os;
+}
