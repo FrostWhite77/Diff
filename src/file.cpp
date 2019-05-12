@@ -137,6 +137,7 @@ vector<string> BinFile::GetText() {
         }
     }
 
+    if(s.size() > 0) lines.push_back(s);
     return lines;
 }
 
@@ -196,9 +197,12 @@ vector<uint8_t> TxtFile::GetBinary() {
     if(!_isLoaded) Load();   
     vector<uint8_t> bytes;
 
-    for(size_t i = 0; i < _lines.size(); i++)
-        for(size_t j = 0; j < _lines[i].size(); i++)
-        bytes.push_back((uint8_t)_lines[i][j]);
+    for(size_t i = 0; i < _lines.size(); i++) {
+        for(size_t j = 0; j < _lines[i].size(); j++) {
+            bytes.push_back((uint8_t)_lines[i][j]);
+        }
+    }
+
     return bytes;
 }
 

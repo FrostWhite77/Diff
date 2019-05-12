@@ -77,6 +77,7 @@ bool charCmp(char x, char y) {
 
 int CompareType = -1;
 bool DifferentTypes = false;
+bool verbose = false;
 
 bool caseInsensitive = false;
 bool ignoreWhitespace = false;
@@ -112,13 +113,23 @@ int main(int argc, char * argv[]) {
     }
 
     for(i = i; i < (size_t)argc; i++) {
-        if(string(argv[i]) == "-i") {
+        string arg(argv[i]);
+        if(arg == "-i") {
             //cout << "switched to case insenstivite comparison" << endl;
             ignoreWhitespace = true;
         }
-        else if(string(argv[i]) == "-c") {
+        else if(arg == "-c") {
             //cout << "switched to case insenstivite comparison" << endl;
             caseInsensitive = true;
+        }
+        else if(arg == "-t=b") {
+            CompareType = 0;
+        }
+        else if(arg == "-t=t") {
+            CompareType = 1;
+        }
+        else if(arg == "-v") {
+            verbose = true;
         }
         else {
             cout << "Invalid argument: " << argv[i] << ", possible arguments: -c: case insensitive, -i: ignore whitespace" << endl;
@@ -131,7 +142,7 @@ int main(int argc, char * argv[]) {
     Result * result = NULL;
     if(files.size() == 2)
     {
-        diff = CreateDiff(files[0], files[1]);
+        diff = CreateDiff(files[0], files[1], CompareType);
         if(diff == NULL) {
             FreeAll(files, folders);
             return 1;
@@ -143,16 +154,16 @@ int main(int argc, char * argv[]) {
         else if(ignoreWhitespace) func = compareIgnored;
 
         result = diff->Compare(func); 
-        result->Print(cout, true);
+        result->Print(cout, verbose);
     }
     else if(files.size() == 1 && folders.size() == 1) {
         result = folders[0]->CompareWithFile(files[0]);
-        result->Print(cout, true);
+        result->Print(cout, verbose);
         cout << endl;
     }
     else if(folders.size() == 2) {
         result = folders[0]->CompareFolders(folders[1]);
-        result->Print(cout, true);
+        result->Print(cout, verbose);
     }
 
     FreeAll(files, folders, diff, result);

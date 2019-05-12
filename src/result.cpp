@@ -91,12 +91,12 @@ ostream & BinResult::Print(ostream & os, bool verbose) const {
     if(verbose && !_result) {
         os << endl << "Unique bytes in " << _fileX << ": ";
         for(size_t i = 0; i < _bytesX.size(); i++) {
-            os << _bytesX[i] << " ";
+            os << bitset<8>(_bytesX[i]) << " ";
         }
         
         os << endl << "Unique bytes in " << _fileY << ": ";
         for(size_t i = 0; i < _bytesY.size(); i++) {
-            os << _bytesY[i] << " ";
+            os << bitset<8>(_bytesY[i]) << " ";
         }
     }
 

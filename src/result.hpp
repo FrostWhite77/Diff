@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <sstream>
+#include <bitset>
 
 class Result {
     public:

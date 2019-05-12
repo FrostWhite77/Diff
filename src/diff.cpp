@@ -129,6 +129,8 @@ Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) 
     vector<string> uniqX;
     vector<string> uniqY;
     
+    cout << "x:" << linesX.size() << ", y: " << linesY.size() << endl;
+
     size_t min = linesX.size() > linesY.size() ? linesY.size() : linesX.size();
     size_t index;
     bool res = true;
