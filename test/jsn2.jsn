@@ -1,0 +1,9 @@
+{ 
+    key: "value", 
+    { key2: "value2" },
+    other_key: "something",
+    {
+        sub1:     "valS",
+        sub2:  "valT"
+    }
+}

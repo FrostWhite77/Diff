@@ -3,11 +3,47 @@
 #include <vector>
 #include <fstream>
 
+#include <stack>
+
 using namespace std;
+
+class CPair {
+    public:
+        CPair() : _key(), _val() {}
+        CPair(const string & key, const string val) : _key(key), _val(val) {}
+        CPair(const CPair & src) {
+            if(&src == this) return;
+
+            _key = src._key;
+            _val = src._val;
+        }
+
+        string GetKey() const {
+            return _key;
+        }
+        string GetVal() const {
+            return _val;
+        }
+
+        void SetKey(const string & key) {
+            _key = key;
+        }
+        void SetVal(const string & val) {
+            _val = val;
+        }
+
+        CPair * Clone() const {
+            return new CPair(*this);
+        }
+
+    private:
+        string _key;
+        string _val;
+};
 
 class CNode {
     public:
-        CNode(string key = "", string val = "") : _key(key), _val(val), _nodes() {
+        CNode(string key = "", string val = "") : _key(key), _val(val), _nodes(), _pairs() {
 
         }
 
@@ -26,11 +62,25 @@ class CNode {
             for(size_t i = 0; i < src._nodes.size(); i++) {
                 _nodes.push_back(src._nodes[i]->Clone());
             }
+
+            for(size_t i = 0; i < _pairs.size(); i++) {
+                delete _pairs[i];
+            }
+
+            _pairs.clear();
+
+            for(size_t i = 0; i < src._pairs.size(); i++) {
+                _pairs.push_back(src._pairs[i]->Clone());
+            }
         }
 
         ~CNode() {
             for(size_t i = 0; i < _nodes.size(); i++) {
                 delete _nodes[i];
+            }
+
+            for(size_t i = 0; i < _pairs.size(); i++) {
+                delete _pairs[i];
             }
         }
 
@@ -42,6 +92,10 @@ class CNode {
             _nodes.push_back(node);
         }
 
+        void AddPair(CPair * pair) {
+            _pairs.push_back(pair);
+        }
+
         void SetKey(const string & key) {
             _key = key;
         }
@@ -51,9 +105,12 @@ class CNode {
         }
 
         void Print(unsigned u = 0) {
-            size_t i = 0;
-            while(i < u) { cout << " "; i++; }
-            cout << _key << ": " << _val << endl;
+            for(size_t i = 0; i < _pairs.size(); i++) {
+                size_t j = 0;
+                while(j < u) { cout << " "; j++; }
+
+                cout << _pairs[i]->GetKey() << ": " << _pairs[i]->GetVal() << endl;
+            }
 
             for(size_t i = 0; i < _nodes.size(); i++) {
                 _nodes[i]->Print(u + 3);
@@ -65,91 +122,153 @@ class CNode {
         string _val;
 
         vector<CNode *> _nodes;
+        vector<CPair *> _pairs;
 };
 
-bool ParseString(string toParse, vector<pair<string, string> > & pairs) {
+string ReadJSON(ifstream & ifs);
+string ReadJSONNode(ifstream & ifs);
+CNode * ParseJSON(const string & json, size_t & i, stack<char> & _stack);
+
+int main() {
+
+    //CNode * root = ReadJSONFile("jsn1.jsn");
+    //root->Print();
+
+    ifstream ifs("jsn1.jsn");
+    string loaded = ReadJSON(ifs);
+
+    //cout << loaded << endl;
+    return 0;
+}
+
+string ReadJSON(ifstream & ifs) {
+    string wholeJson;
+
+    while(ifs) {
+        if(ifs.peek() == '{') {
+            wholeJson.append(ReadJSONNode(ifs));
+        }
+    }
+
+    ifs.close();
+
+    stack<char> st;
+    size_t pos = 0;
+    CNode * root = ParseJSON(wholeJson, pos, st);
+    root->Print();
+    delete root;
+
+    return wholeJson;
+}
+
+CNode * ParseJSON(const string & json, size_t & i, stack<char> & _stack) {
+    CNode * node = new CNode;
+    char last = 0;
     
-} 
+    bool lKey = false, lVal = false;
 
-CNode * ReadNode(ifstream & ifs) {
-    string part;
-    ifs.get();
+    CPair pair;
+    string tmp;
 
-    CNode * node = new CNode();
+    while(i < json.size()) {        
+        // first char is not { => error        
+        if(last == 0 && json[i] != '{') {
+            throw "JSON Format Error!";
+        }
 
-    while(ifs.good()) {
-        if(ifs.peek() == '{') node->AddCNode(ReadNode(ifs));
+        // { of current CNode => skip
+        if(last == 0 && json[i] == '{') {
+            last = json[i];
+            _stack.push(last);
 
-        char c = ifs.peek();
-        if(c != '}') part.push_back(ifs.get());
-        else break;
-    }
-
-    string key, val;
-    size_t i = 0;
-
-    bool inside = false;
-
-    while(i < part.size()) {
-        if(!inside && isspace(part[i])) {
             i++;
             continue;
         }
-        else {
-            if(part[i] == ':') {
-                i++;
-                break;
-            }
-            inside = true;
-            key.push_back(part[i]);
-            i++;
-        }
-    }
 
-    inside = false;
-    while(i < part.size()) {
-        if(!inside && part[i] != '"') {
+        // not loading key or val, found { => load subnode
+        if(!lKey && !lVal && json[i] == '{') {
+            node->AddCNode(ParseJSON(json, i, _stack));
+            last = json[i];
+            continue;
+        }
+
+        // reading key
+        if((last == '{' || last == ',') && !lKey && !lVal) {
+            lKey = true;
+            tmp.clear();
+            tmp.push_back(json[i]);
+            last = json[i];
             i++;
             continue;
         }
-        else {
-            if(!inside && part[i] == '"') {
-                i++;
-                inside = true;
-                continue;
-            }
-            if(inside && part[i] == '"') {
-                break;
-            }
-            val.push_back(part[i]);
+
+        if(lKey && json[i] != ':' && json[i] != ',') {
+            tmp.push_back(json[i]);          
+            last = json[i];
             i++;
+            continue;
+        }
+
+        if(lKey && json[i] == ':') {
+            pair.SetKey(tmp);
+            tmp.clear();
+            lKey = false;    
+            last = json[i];
+            i++;
+            continue;
+        }
+
+        // reading val
+        if(last == ':' && !lKey && !lVal) {
+            lVal = true;
+            tmp.clear();
+            tmp.push_back(json[i]);
+            last = json[i];
+            i++;
+            continue;
+        }
+
+        if(lVal && json[i] != ',' && json[i] != '}') {
+            tmp.push_back(json[i]);   
+            last = json[i];       
+            i++;
+            continue;
+        }
+
+        if(lVal && (json[i] == ',' || json[i] == '}')) {
+            pair.SetVal(tmp);
+            tmp.clear();
+            node->AddPair(pair.Clone());
+            lVal = false;
+            last = json[i];
+            i++;
+
+            if(json[i] == '}') break;
+            continue;
+        }
+
+        if(!lVal && !lKey && json[i] == '}') {
+            _stack.pop();
+            i++;
+            break;
         }
     }
-
-    node->SetKey(key);
-    node->SetVal(val);
 
     return node;
 }
 
-CNode * ReadJSONFile(const string & path) {
-    ifstream ifs(path);
-    CNode * root = NULL;
+string ReadJSONNode(ifstream & ifs) {
+    string subnode;
+    subnode.push_back(ifs.get());
 
-    char x = ifs.peek();
-    if(x == '{') {
-        root = ReadNode(ifs);
-    }    
+    while(ifs.peek() != EOF || ifs.peek() != '}' || ifs.good() == true) {
+        if((char)ifs.peek() == '{') subnode.append(ReadJSONNode(ifs));
+        
+        char c = ifs.get();
 
-    ifs.close();
-    return root;
-} 
+        if(!isspace(c)) subnode.push_back(c);        
+        if(ifs.bad() || ifs.eof() || c == '}') break;
+    }
 
-int main() {
-
-    CNode * root = ReadJSONFile("jsn1.jsn");
-    root->Print();
-
-    delete root;
-    return 0;
+    return subnode;
 }
