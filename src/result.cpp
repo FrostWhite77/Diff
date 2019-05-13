@@ -223,7 +223,7 @@ ostream & FileFolderResult::Print(std::ostream & os, bool verbose) const {
 }
 
 // FolderResult
-FolderResult::FolderResult(const string & folder, const string & file, bool result, vector<Result *> results, vector<string> uFilesX, vector<string> uFilesY) : Result(folder, file, result), _results(results), _uFilesX(uFilesX), _uFilesY(uFilesY) {
+FolderResult::FolderResult(const string & folderX, const string & folderY, bool result, vector<Result *> results, vector<string> uFilesX, vector<string> uFilesY) : Result(folder, file, result), _results(results), _uFilesX(uFilesX), _uFilesY(uFilesY) {
 
 }
 
