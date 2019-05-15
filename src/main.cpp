@@ -84,7 +84,7 @@ bool ignoreWhitespace = false;
 
 int main(int argc, char * argv[]) {       
         if(argc <= 2) {
-        cout << "Invalid number of arguments!" << endl << endl;
+        cout << "Invalid numb   er of arguments!" << endl << endl;
 
         cout << "Usage: ./diff <file/folder> <file/folder> [PARAMS]" << endl;
         cout << "Diff can determine type of comparison by file extensions (both files have to have same)," << endl
@@ -159,6 +159,8 @@ int main(int argc, char * argv[]) {
         {
             diff = CreateDiff(files[0], files[1], CompareType);
             if(diff == NULL) {
+                cout << "Files have different extension. Comparison type must be specifed explicitly." << endl;
+
                 FreeAll(files, folders);
                 return 1;
             }
