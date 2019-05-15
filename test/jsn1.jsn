@@ -1,5 +1,0 @@
-{ 
-    key: "value", 
-    { subkey: "subval" },
-    other_key: "something"
-}

@@ -3,7 +3,7 @@
 using namespace std;
 
 // Diff
-Diff::Diff(const File & firstFile, const File &secondFile, Settings * settings) : _first(firstFile.Clone()), _second(secondFile.Clone()), _settings(settings) {
+Diff::Diff(const File & firstFile, const File &secondFile) : _first(firstFile.Clone()), _second(secondFile.Clone()) {
     _first->Load();
     _second->Load();
 }
@@ -13,17 +13,14 @@ Diff::Diff(const Diff & src) {
 
     if(_first != NULL) delete _first; 
     if(_second != NULL) delete _second;
-    if(_settings != NULL) delete _settings;
 
     _first = src._first->Clone();
     _second = src._second->Clone();
-    _settings = src._settings->Clone();
 }
 
 Diff::~Diff() {
     if(_first != NULL) delete _first; 
     if(_second != NULL) delete _second;
-    if(_settings != NULL) delete _settings;
 }
 
 void Diff::SetFirst(const File & file) {
@@ -76,26 +73,26 @@ BinDiff::~BinDiff() {
 Result * BinDiff::Compare(bool (*compareParts)(const string &, const string &)) {
     vector<uint8_t> bytesX = _first->GetBinary();
     vector<uint8_t> bytesY = _second->GetBinary();
-    vector<uint8_t> ux;
-    vector<uint8_t> uy;
+    vector<NumberedByte> ux;
+    vector<NumberedByte> uy;
 
     size_t min = bytesX.size() > bytesY.size() ? bytesY.size() : bytesX.size();
     size_t index;
     bool res = true;
     for(index = 0; index < min; index++) {
         if(bytesX[index] != bytesY[index]) {
-            ux.push_back(bytesX[index]);
-            uy.push_back(bytesY[index]);
+            ux.push_back(make_pair(index, bytesX[index]));
+            uy.push_back(make_pair(index, bytesY[index]));
             res = false;
         }
     }
 
     for(size_t i = index; i < bytesX.size(); i++) {
-        ux.push_back(bytesX[i]);
+        ux.push_back(make_pair(i, bytesX[i]));
         res = false;
     }
     for(size_t i = index; i < bytesY.size(); i++) {
-        uy.push_back(bytesY[i]);
+        uy.push_back(make_pair(i, bytesY[i]));
         res = false;
     }
 
@@ -126,10 +123,8 @@ TxtDiff::~TxtDiff() {
 Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) {   
     vector<string> linesX = _first->GetText();
     vector<string> linesY = _second->GetText();
-    vector<string> uniqX;
-    vector<string> uniqY;
-    
-    cout << "x:" << linesX.size() << ", y: " << linesY.size() << endl;
+    vector<NumberedLine> uniqX;
+    vector<NumberedLine> uniqY;
 
     size_t min = linesX.size() > linesY.size() ? linesY.size() : linesX.size();
     size_t index;
@@ -138,26 +133,26 @@ Result * TxtDiff::Compare(bool (*compareParts)(const string &, const string &)) 
     for(index = 0; index < min; index++) {
         if(compareParts != NULL) {
             if(!compareParts(linesX[index], linesY[index])) {
-                uniqX.push_back(linesX[index]);
-                uniqY.push_back(linesY[index]);
+                uniqX.push_back(make_pair(index, linesX[index]));
+                uniqY.push_back(make_pair(index, linesY[index]));
                 res = false;
             }
         }
         else {
             if(linesX[index] != linesY[index]) {
-                uniqX.push_back(linesX[index]);
-                uniqY.push_back(linesY[index]);
+                uniqX.push_back(make_pair(index, linesX[index]));
+                uniqY.push_back(make_pair(index, linesY[index]));
                 res = false;
             }
         }
     }
 
     for(size_t i = index; i < linesX.size(); i++) {
-        uniqX.push_back(linesX[i]);
+        uniqX.push_back(make_pair(i, linesX[i]));
         res = false;
     }
     for(size_t i = index; i < linesY.size(); i++) {
-        uniqY.push_back(linesY[i]);
+        uniqY.push_back(make_pair(i, linesY[i]));
         res = false;
     }
 
@@ -182,11 +177,24 @@ JsnDiff::JsnDiff(const JsnDiff & src) : Diff(src) {
 }
 
 JsnDiff::~JsnDiff() {
-
+    
 }
 
-Result * JsnDiff::Compare(bool (*compareParts)(const string &, const string &)) {
-    return new JsnResult(_first->GetFileName(), _second->GetFileName(), false);
+Result * JsnDiff::Compare(bool (*compareParts)(const string &, const string &)) {    
+    CNode * root1 = _first->GetJSON();
+    CNode * root2 = _second->GetJSON();
+    
+    if(root1 == NULL) {
+        throw JSONFormatErrorException(_first->GetFullFileName());
+    }
+    if(root2 == NULL) {
+        throw JSONFormatErrorException(_second->GetFullFileName());
+    }
+    
+    CNode * differNode = new CNode("Compare"); 
+
+    bool r = root1->IsSameAs(root2, differNode);
+    return new JsnResult(_first->GetFileName(), _second->GetFileName(), r, differNode);
 }   
 
 ostream & operator<<(ostream & os, const JsnDiff & src) {

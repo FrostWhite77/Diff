@@ -1,60 +1,69 @@
 #pragma once
 
-#include <istream>
+#include "exception.hpp"
+
 #include <vector>
 #include <string>
+#include <fstream>
+#include <stack>
 
-class JSONNode {
+#include <iostream>
+
+class CPair {
     public:
-        JSONNode();
-        JSONNode(const JSONNode & src);
-        virtual ~JSONNode(); 
+        CPair();
+        CPair(const std::string & key, const std::string val);
+        CPair(const CPair & src);
 
-        virtual std::string GetValue() const;
+        CPair * Clone() const;
 
-        void AddSubNode(const JSONNode & node);
-        virtual bool Load();
+        std::string GetKey() const;
+        std::string GetVal() const;
 
-        friend std::istream operator>>(std::istream is, JSONNode & node);
+        void SetKey(const std::string & key);
+        void SetVal(const std::string & val);
+
+        bool operator==(const CPair x) const; 
 
     private:
-        std::vector<JSONNode *> _subNodes;
+        std::string _key;
+        std::string _val;
 };
 
-class JSONPair : public JSONNode {
+class CNode {
     public:
-        JSONPair();
-        JSONPair(const JSONPair & src);
-        virtual ~JSONPair(); 
+        CNode(const std::string & origin);
+        CNode(const CNode & src);
+        ~CNode();
 
-        virtual std::string GetValue() const override;
+        CNode * Clone() const;
+        
+        void AddCNode(CNode * node);
+        void AddPair(CPair * pair);
 
-        virtual bool Load() override;
+        bool IsEmpty() const;
 
-        friend std::istream operator>>(std::istream is, JSONPair & node);
+        std::string GetOrigin() const;
+        void SetOrigin(std::string newOrigin);
+
+        bool EqualsNode(const CNode * node) const;
+        bool EqualsPair(const CPair * pair) const;
+        bool IsSameAs(const CNode * node, CNode * store = NULL) const;
+
+        std::ostream & Print(std::ostream & os, unsigned u = 0, bool printOrigin = false);
 
     private:
-        std::string _name;
-        std::string _val; 
+        std::string _origin;
+        std::vector<CNode *> _nodes;
+        std::vector<CPair *> _pairs;
 };
 
-class JSONArray : public JSONNode {
-    public:
-        JSONArray();
-        JSONArray(const JSONArray & src);
-        virtual ~JSONArray(); 
+std::string ReadJSONToString(std::ifstream & ifs);
+std::string ReadCNodeToString(std::ifstream & ifs);
 
-        virtual std::string GetValue() const override;
+bool CheckBasicJSONFormat(const std::string & json);
 
-        virtual bool Load() override;
+CNode * LoadAndParseJSON(const std::string & path);
 
-        friend std::istream operator>>(std::istream is, JSONArray & node);
-
-    private:
-        std::string _name;
-        std::vector<std::string> _vals;
-};
-
-JSONNode * ReadNode(std::ifstream ifs);
-JSONPair * ReadPair(std::ifstream ifs);
-JSONArray * ReadArray(std::ifstream ifs);
+CNode * ReadCNode(const std::string & json, size_t & i, const std::string & origin);
+std::string ReadVal(const std::string & json, size_t & i);

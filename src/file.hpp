@@ -1,6 +1,7 @@
 #pragma once
 
 #include "io.hpp"
+#include "json.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -80,7 +81,7 @@ class File {
          * Method to get JSON representation of the file
          * @return vector of file nodes
          */ 
-        virtual std::vector<std::string> GetJSON();
+        virtual CNode * GetJSON();
 
         /*
          * Method to print file info to the ostream
@@ -176,7 +177,7 @@ class BinFile : public File {
          * Method to get JSON representation of the file
          * @return empty vector - can not represent binary file as JSON
          */ 
-        virtual std::vector<std::string> GetJSON() override;
+        virtual CNode * GetJSON() override;
 
         /*
          * Method to print file info to the ostream
@@ -255,7 +256,7 @@ class TxtFile : public File {
          * Method to get JSON representation of the file
          * @return empty vector (can not represent txt file as JSON)
          */ 
-        virtual std::vector<std::string> GetJSON() override;
+        virtual CNode * GetJSON() override;
 
         /*
          * Method to print file info to the ostream
@@ -334,7 +335,7 @@ class JsnFile : public File {
          * Method to get JSON representation of the file
          * @return pointer to root node
          */ 
-        virtual std::vector<std::string> GetJSON() override;
+        virtual CNode * GetJSON() override;
 
         /*
          * Method to print file info to the ostream
@@ -353,7 +354,7 @@ class JsnFile : public File {
         /*
          * Vector of nodes
          */ 
-        std::vector<std::string> _nodes;
+        CNode * _rootNode;
 };
 
 /*

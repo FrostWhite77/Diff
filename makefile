@@ -1,31 +1,31 @@
-CC=g++
-FLAGS=-Wall -pedantic -g -O2
+CXX=g++
+LD=g++
+CXXFLAGS=-std=c++11 -Wall -pedantic
 
 BLD=./build/
 SRC=./src/
 
 all: diff
 
-diff: $(SRC)main.cpp $(BLD)diff.o $(BLD)folder.o $(BLD)result.o $(BLD)io.o
-	$(CC) -std=c++11 $(FLAGS) -o diff $(SRC)main.cpp $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)result.o $(BLD)settings.o $(BLD)io.o
-
-$(BLD)folder.o: $(SRC)folder.cpp $(SRC)folder.hpp $(BLD)diff.o $(BLD)result.o
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)folder.o $(SRC)folder.cpp
-
-$(BLD)diff.o: $(SRC)diff.cpp $(SRC)diff.hpp $(BLD)file.o $(BLD)result.o $(BLD)settings.o
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)diff.o $(SRC)diff.cpp
-
-$(BLD)file.o: $(SRC)file.cpp $(SRC)file.hpp
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)file.o $(SRC)file.cpp
-
-$(BLD)result.o: $(SRC)result.cpp $(SRC)result.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)result.o $(SRC)result.cpp
-
-$(BLD)settings.o: $(SRC)settings.cpp $(SRC)settings.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)settings.o $(SRC)settings.cpp
-
-$(BLD)io.o: $(SRC)io.cpp $(SRC)io.hpp 
-	$(CC) -std=c++11 $(FLAGS) -c -o $(BLD)io.o $(SRC)io.cpp
+diff: $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)io.o $(BLD)json.o $(BLD)main.o $(BLD)result.o $(BLD)exception.o
+	$(LD) -o $@ $^
 
 clean:
-	rm -rf $(BLD)*.o 
+	rm -f diff $(BLD)*
+
+compile: diff
+
+run:
+	./diff
+
+$(BLD)%o: $(SRC)%cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BLD)diff.o: $(SRC)diff.cpp $(SRC)diff.hpp $(SRC)file.hpp $(SRC)io.hpp $(SRC)json.hpp $(SRC)result.hpp
+$(BLD)file.o: $(SRC)file.cpp $(SRC)file.hpp $(SRC)io.hpp $(SRC)json.hpp
+$(BLD)folder.o: $(SRC)folder.cpp $(SRC)folder.hpp $(SRC)diff.hpp $(SRC)file.hpp $(SRC)io.hpp $(SRC)json.hpp $(SRC)result.hpp
+$(BLD)io.o: $(SRC)io.cpp $(SRC)io.hpp
+$(BLD)json.o: $(SRC)json.cpp $(SRC)json.hpp $(SRC)exception.hpp
+$(BLD)main.o: $(SRC)main.cpp $(SRC)diff.hpp $(SRC)file.hpp $(SRC)io.hpp $(SRC)json.hpp $(SRC)result.hpp $(SRC)folder.hpp
+$(BLD)result.o: $(SRC)result.cpp $(SRC)result.hpp $(SRC)json.hpp
+$(BLD)exception.o: $(SRC)exception.cpp $(SRC)exception.hpp

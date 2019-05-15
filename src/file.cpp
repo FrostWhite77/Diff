@@ -51,8 +51,8 @@ vector<string> File::GetText() {
     return vector<string>();
 }
 
-vector<string> File::GetJSON() {
-    return vector<string>();
+CNode * File::GetJSON() {
+    return NULL;
 }
 
 ostream & File::Print(ostream & os) const {
@@ -141,8 +141,8 @@ vector<string> BinFile::GetText() {
     return lines;
 }
 
-vector<string> BinFile::GetJSON() {
-    return vector<string>();
+CNode * BinFile::GetJSON() {
+    return NULL;
 }
 
 ostream & BinFile::Print(ostream & os) const {
@@ -211,8 +211,8 @@ vector<string> TxtFile::GetText() {
     return _lines;
 }
 
-vector<string> TxtFile::GetJSON() {
-    return vector<string>();
+CNode * TxtFile::GetJSON() {
+    return NULL;
 }
 
 ostream & TxtFile::Print(ostream & os) const {
@@ -226,18 +226,23 @@ ostream & operator<<(ostream & os, const TxtFile & src) {
 }
 
 // JsnFile
-JsnFile::JsnFile(string fileName) : File(fileName) {
+JsnFile::JsnFile(string fileName) : File(fileName), _rootNode(NULL) {
 
 }
 
-JsnFile::JsnFile(const JsnFile & src) : File(src) {
+JsnFile::JsnFile(const JsnFile & src) : File(src), _rootNode(NULL) {
     if(&src == this) return;
 
-    _nodes = src._nodes;
+    if(_rootNode != NULL) delete _rootNode;
+
+    if(src._rootNode != NULL)
+        _rootNode = src._rootNode->Clone();
+    else
+        _rootNode = NULL;
 }
 
 JsnFile::~JsnFile() {
-
+    if(_rootNode != NULL) delete _rootNode;
 }
 
 JsnFile * JsnFile::Clone() const {
@@ -245,26 +250,39 @@ JsnFile * JsnFile::Clone() const {
 }
 
 size_t JsnFile::GetFileSize() const {
-    return _nodes.size();
+    return 0;
 }
 
 bool JsnFile::Load() {
-    return false;
+    CNode * root = NULL;
+    root = LoadAndParseJSON(_filePath + "/" + _fileName);
+    
+    if(root == NULL) {
+        return false;
+    }
+    
+    _rootNode = root;
+    _isLoaded = _rootNode != NULL;
+    return _isLoaded;
 }
 
 vector<uint8_t> JsnFile::GetBinary() {
-    if(!_isLoaded) Load();  
-    return vector<uint8_t>();
+    BinFile tmp(_filePath + "/" + _fileName);
+    vector<uint8_t> bytes = tmp.GetBinary();
+
+    return bytes;
 }
 
 vector<string> JsnFile::GetText() {
-    if(!_isLoaded) Load();  
-    return vector<string>();
+    TxtFile tmp(_filePath + "/" + _fileName);
+    vector<string> lines = tmp.GetText();
+
+    return lines;
 }
 
-vector<string> JsnFile::GetJSON() {
+CNode * JsnFile::GetJSON() {
     if(!_isLoaded) Load();  
-    return _nodes;
+    return _rootNode;
 }
 
 ostream & JsnFile::Print(ostream & os) const {

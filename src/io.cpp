@@ -7,7 +7,7 @@ namespace IO {
         return ifstream(filePath).good();
     }
 
-    bool IsFile(const string filePath) {
+    bool IsFile(const string filePath) {        
         struct stat s;
         if(stat(filePath.c_str(), &s) == 0) {
             if(s.st_mode & S_IFREG) return true;

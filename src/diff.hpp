@@ -2,7 +2,6 @@
 
 #include "file.hpp"
 #include "result.hpp"
-#include "settings.hpp"
 #include "io.hpp"
 
 #include <sstream>
@@ -19,7 +18,7 @@ class Diff {
          * @param[in] secondFile: file to compare
          * @param[in] settings: pointer to Settings 
          */
-        Diff(const File & firstFile, const File & secondFile, Settings * settings = NULL);
+        Diff(const File & firstFile, const File & secondFile);
         
         /*
          * Copy Constructor
@@ -74,11 +73,6 @@ class Diff {
          * File pointer to second file
          */ 
         File * _second;
-
-        /*
-         * Settings pointer
-         */ 
-        Settings * _settings;
 };
 
 /*

@@ -84,8 +84,22 @@ bool ignoreWhitespace = false;
 
 int main(int argc, char * argv[]) {       
         if(argc <= 2) {
-        cout << "Invalid number of arguments!" << endl;
-        return 1;
+        cout << "Invalid number of arguments!" << endl << endl;
+
+        cout << "Usage: ./diff <file/folder> <file/folder> [PARAMS]" << endl;
+        cout << "Diff can determine type of comparison by file extensions (both files have to have same)," << endl
+             << "if extensions are different, comparison type must be specified explicitly. Otherwise will program fail." << endl << endl
+             << "If one arg is file and other one is folder, in folder is being searched file with same name and extension, if found" << endl
+             << "compare will take place, otherwise false." << endl << endl
+             << "During folder being compared with folder, same files are searched and compared, and unique files will be printed out." << endl << endl;
+        cout << "Param List: " << endl;
+        cout << "-v: verbose listing, when files are not same" << endl;
+        cout << "-c: case insensitive comparation (effective only for text comparing)" << endl;
+        cout << "-i: ignore whitespaces (effective only for text comparing)" << endl;
+        cout << "-t=b: binary comparison" << endl;
+        cout << "-t=t: text comparison" << endl;
+
+        return 0;
     }
 
     vector<File *> files;
@@ -140,33 +154,41 @@ int main(int argc, char * argv[]) {
 
     Diff * diff = NULL;
     Result * result = NULL;
-    if(files.size() == 2)
-    {
-        diff = CreateDiff(files[0], files[1], CompareType);
-        if(diff == NULL) {
-            FreeAll(files, folders);
-            return 1;
+    try {
+        if(files.size() == 2)
+        {
+            diff = CreateDiff(files[0], files[1], CompareType);
+            if(diff == NULL) {
+                FreeAll(files, folders);
+                return 1;
+            }
+
+            bool (*func)(const string &, const string &) = NULL;
+            if(caseInsensitive && ignoreWhitespace) func = compareIgnCaseIns;
+            else if(caseInsensitive) func = lineCmpIncase;
+            else if(ignoreWhitespace) func = compareIgnored;
+
+            result = diff->Compare(func); 
+            result->Print(cout, verbose);
+        }
+        else if(files.size() == 1 && folders.size() == 1) {
+            result = folders[0]->CompareWithFile(files[0]);
+            result->Print(cout, verbose);
+        }
+        else if(folders.size() == 2) {
+            result = folders[0]->CompareFolders(folders[1]);
+            result->Print(cout, verbose);
         }
 
-        bool (*func)(const string &, const string &) = NULL;
-        if(caseInsensitive && ignoreWhitespace) func = compareIgnCaseIns;
-        else if(caseInsensitive) func = lineCmpIncase;
-        else if(ignoreWhitespace) func = compareIgnored;
+        FreeAll(files, folders, diff, result);
+        return 0;
+    }
+    catch(const JSONFormatErrorException & err) {
+        FreeAll(files, folders, diff, result);
+        cout << err << "Exiting..." << endl;
+        return 1;
+    }    
 
-        result = diff->Compare(func); 
-        result->Print(cout, verbose);
-    }
-    else if(files.size() == 1 && folders.size() == 1) {
-        result = folders[0]->CompareWithFile(files[0]);
-        result->Print(cout, verbose);
-        cout << endl;
-    }
-    else if(folders.size() == 2) {
-        result = folders[0]->CompareFolders(folders[1]);
-        result->Print(cout, verbose);
-    }
-
-    FreeAll(files, folders, diff, result);
     return 0;
 }
 

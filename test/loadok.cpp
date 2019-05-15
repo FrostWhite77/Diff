@@ -132,8 +132,6 @@ class CNode {
 string ReadJSON(ifstream & ifs);
 string ReadJSONNode(ifstream & ifs);
 CNode * ParseJSON(const string & json, size_t & i, stack<char> & _stack);
-string ReadVal(const string & json, size_t & i);
-bool CheckJSON(const string & json);
 
 int main() {
     ifstream ifs("jsn1.jsn");
@@ -167,24 +165,17 @@ string ReadJSON(ifstream & ifs) {
     root->Print();
     delete root;
 
-    bool checkFormat = CheckJSON(wholeJson);
-    cout << "JSON Format Check: " << boolalpha << checkFormat << endl;
-
     return wholeJson;
 }
 
 CNode * ParseJSON(const string & json, size_t & i, stack<char> & _stack) {
     CNode * node = new CNode;
-    char last = 0, next = 0;
+    char last = 0;
     
     bool lKey = false, lVal = false;
 
     CPair pair;
     string tmp;
-
-    string nextDelims = ",{:";
-    string endDelims = "";
-    string * s = &nextDelims;
 
     while(i < json.size()) {        
         // first char is not { => error        
@@ -192,48 +183,110 @@ CNode * ParseJSON(const string & json, size_t & i, stack<char> & _stack) {
             throw "JSON Format Error!";
         }
 
-        next = 0;
-
         // { of current CNode => skip
         if(last == 0 && json[i] == '{') {
+            //cout << "a" << endl;
+            
             last = json[i];
             i++;
             continue;
         }
 
+        if(json[i] == '{' || json[i] == '"') {
+            _stack.push(json[i]);
+        }
+        if(json[i] == '}') {
+            char c = _stack.top();
+            if(c != '{') throw "JSON Format Error!";
+            _stack.pop();
+        }
+        if(json[i] == '"') {
+            char c = _stack.top();
+            if(c != '"') throw "JSON Format Error!";
+            _stack.pop();
+        }
+
         // not loading key or val, found { => load subnode
-        if(json[i] == '{') {
-            //cout << "start " << json[i] << endl;
+        if(!lKey && !lVal && json[i] == '{') {
+            //cout << "b" << endl << endl;
             node->AddCNode(ParseJSON(json, i, _stack));
             last = json[i];
             i++;
-            //cout << "end " << json[i] << ", last: " << last << endl;
+            //cout << "last is " << last << endl << endl;
             continue;
         }
 
         // reading key
-        if(last == '{' || last == ',') {
-            pair.SetKey(ReadVal(json, i));
+        if((last == '{' || last == ',') && !lKey && !lVal) {
+            //cout << "c" << endl;
+            //cout << "last " << last << "| current " << json[i] << endl; 
+
+            lKey = true;
+            tmp.clear();
+            tmp.push_back(json[i]);
+            last = json[i];
+            i++;
+            continue;
+        }
+
+        if(lKey && json[i] != ':' && json[i] != ',') {
+            //cout << "d" << endl;
+            tmp.push_back(json[i]);          
+            last = json[i];
+            i++;
+            continue;
+        }
+
+        if(lKey && json[i] == ':') {
+            //cout << "e" << endl;
+            pair.SetKey(tmp);
+            tmp.clear();
+            lKey = false;    
             last = json[i];
             i++;
             continue;
         }
 
         // reading val
-        if(last == ':') {
-            pair.SetVal(ReadVal(json, i));
-            node->AddPair(pair.Clone());
-
-            pair.SetKey("");
-            pair.SetVal("");
-
+        if(last == ':' && !lKey && !lVal) {
+            //cout << "f" << endl;
+            lVal = true;
+            tmp.clear();
+            tmp.push_back(json[i]);
             last = json[i];
             i++;
             continue;
         }
 
-        if(last == '}' || json[i] == '}') break;
-        else i++;
+        if(lVal && json[i] != ',' && json[i] != '}') {
+            //cout << "g" << endl;
+            tmp.push_back(json[i]);   
+            last = json[i];       
+            i++;
+            continue;
+        }
+
+        if(lVal && (json[i] == ',' || json[i] == '}')) {
+            //cout << "h" << endl;
+            pair.SetVal(tmp);
+            tmp.clear();
+            node->AddPair(pair.Clone());
+            lVal = false;
+            last = json[i];
+            i++;
+
+            if(last == '}' || json[i] == '}') break;
+            continue;
+        }
+
+        if(!lVal && !lKey && json[i] == '}') {
+            //cout << "i" << endl;
+            _stack.pop();
+            i++;
+            break;
+        }
+
+        i++;
     }
 
     return node;
@@ -253,97 +306,4 @@ string ReadJSONNode(ifstream & ifs) {
     }
 
     return subnode;
-}
-
-string ReadVal(const string & json, size_t & i) {
-    string s;
-
-    while(i < json.size()) {
-        if(json[i] == ',' || json[i] == ':' || json[i] == '}') {
-            //cout << "read: " << s << endl;
-            return s;
-        }
-        else if(json[i] == '"') {
-
-        }
-        else {
-            s.push_back(json[i]);
-        }
-
-        i++;
-    }
-
-    return s;
-}
-
-bool CheckJSON(const string & json) {
-    stack<char> st;
-    bool inside = false, result = true;
-    
-    const char double_quote = string("\"").c_str()[0];
-
-    char last = 0;
-    size_t i = 0;
-    while(result && i < json.size()) {
-        switch(json[i]) {
-            case '{':
-                st.push(json[i]);
-                break;
-            case '}':
-                if(st.empty()) {
-                    result = false;
-                    cout << "missing bracket" << endl;
-                    break;
-                }
-                char c = (char)st.top();
-                if(c != '{') {
-                    result = false;
-                    cout << "missing bracket" << endl;
-                    break;
-                }
-                st.pop();
-                break;
-        }
-
-        if(!inside && json[i] == '"') {
-            st.push('"');
-            inside = true;
-
-            if(last != ':') {
-                result = false;
-                cout << "missing colon" << endl;
-            }
-        }
-        else if(inside && json[i] == '"') {
-            char c = (char)st.top();
-            if(c != '"') {
-                result = false;
-                cout << "missing \"" << endl;
-            }
-            inside = false;
-            st.pop();
-        }
-
-        
-        if(last != 0 && json[i] == '{' && last != ',' && last != '{') {
-            cout << "missing comma" << endl;
-            result = false;
-        }
-        else if(last == '}' && (json[i] != ',' && json[i] != '}')) {
-            cout << "missing comma" << endl;
-            result = false;    
-        }
-
-        if(last == ',' && json[i] == '}') {
-            cout << "missing key/val" << endl;
-            result = false;
-        }
-        
-        last = json[i];
-        i++;
-    }
-
-    if(!st.empty()) result = false;
-
-    return result;
 }

@@ -1,0 +1,17 @@
+{ 
+    key: "value",
+    { 
+        subkey: "subval",
+        {
+            another: "another"
+        },
+        file: "file/path"
+    },
+    other_key: "something",
+    {
+        test:   "tetst"
+    },
+    {
+        other: "other"
+    }
+}

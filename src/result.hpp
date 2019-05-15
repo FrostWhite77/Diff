@@ -1,5 +1,7 @@
 #pragma once
 
+#include "json.hpp"
+
 #include <vector>
 #include <sstream>
 #include <bitset>
@@ -105,6 +107,8 @@ class Result {
         bool _result;
 };
 
+typedef std::pair<size_t, uint8_t> NumberedByte;
+
 /*
  * Binary Result
  * @inherit from general Result
@@ -128,7 +132,7 @@ class BinResult : public Result {
          * @param[in] bytesY: vector of unique bytes in the second file
          * @param[in] result: comparation result
          */ 
-        BinResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<uint8_t> bytesX, std::vector<uint8_t> bytesY);
+        BinResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<NumberedByte> bytesX, std::vector<NumberedByte> bytesY);
         
         /*
          * Copy Constructor
@@ -157,13 +161,15 @@ class BinResult : public Result {
         /*
          * Unique bytes in the first file
          */ 
-        std::vector<uint8_t> _bytesX;
+        std::vector<NumberedByte>_bytesX;
 
         /*
          * Unique nodes in the second file
          */ 
-        std::vector<uint8_t> _bytesY;
+        std::vector<NumberedByte>_bytesY;
 };
+
+typedef std::pair<size_t, std::string> NumberedLine;
 
 /*
  * Text Result
@@ -188,7 +194,7 @@ class TxtResult : public Result {
          * @param[in] linesY: vector of unique lines in the second file
          * @param[in] result: comparation result
          */ 
-        TxtResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<std::string> linesX, std::vector<std::string> linesY);
+        TxtResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<NumberedLine> linesX, std::vector<NumberedLine> linesY);
         
         /*
          * Copy Constructor
@@ -217,12 +223,12 @@ class TxtResult : public Result {
         /*
          * Unique lines in the first file
          */ 
-        std::vector<std::string> _linesX;
+        std::vector<NumberedLine> _linesX;
 
         /*
          * Unique lines in the first file
          */ 
-        std::vector<std::string> _linesY;
+        std::vector<NumberedLine> _linesY;
 };
 
 /*
@@ -248,7 +254,7 @@ class JsnResult : public Result {
          * @param[in] nodesY: vector of unique nodes in the second file
          * @param[in] result: comparation result
          */ 
-        JsnResult(const std::string & fileX, const std::string & fileY, bool result, std::vector<int> nodesX, std::vector<int> nodesY);
+        JsnResult(const std::string & fileX, const std::string & fileY, bool result, CNode * differ);
         
         /*
          * Copy Constructor
@@ -277,12 +283,7 @@ class JsnResult : public Result {
         /*
          * Unique nodes in the first file
          */ 
-        std::vector<int> _nodesX;
-        
-        /*
-         * Unique nodes in the second file
-         */ 
-        std::vector<int> _nodesY;
+        CNode * _differ;
 };
 
 /*
