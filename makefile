@@ -5,7 +5,7 @@ CXXFLAGS=-std=c++11 -Wall -pedantic
 BLD=./build/
 SRC=./src/
 
-all: diff
+all: diff doc
 
 diff: $(BLD)diff.o $(BLD)file.o $(BLD)folder.o $(BLD)io.o $(BLD)json.o $(BLD)main.o $(BLD)result.o $(BLD)exception.o
 	$(LD) -o $@ $^
@@ -17,6 +17,9 @@ compile: diff
 
 run:
 	./diff
+
+doc: diff
+	rm -rf ./doc/* && doxygen
 
 $(BLD)%o: $(SRC)%cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

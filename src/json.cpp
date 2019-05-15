@@ -18,6 +18,10 @@ CPair::CPair(const CPair & src) {
     _val = src._val;
 }
 
+CPair::~CPair() {
+
+}
+
 CPair * CPair::Clone() const {
     return new CPair(*this);
 }
@@ -110,7 +114,7 @@ bool CNode::EqualsNode(const CNode * node) const {
 }
 
 bool CNode::EqualsPair(const CPair * pair) const {
-    for(size_t i =0; i < _pairs.size(); i++) {
+    for(size_t i = 0; i < _pairs.size(); i++) {
         if(*_pairs[i] == *pair) return true;
     }
     return false;

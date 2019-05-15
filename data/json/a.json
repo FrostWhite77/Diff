@@ -1,5 +1,6 @@
 {
-    pair: "unique",
+    pair: "unique2",
+    same: "same",
     {
         y: "y"
     }

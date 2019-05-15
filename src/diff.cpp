@@ -181,6 +181,8 @@ JsnDiff::~JsnDiff() {
 }
 
 Result * JsnDiff::Compare(bool (*compareParts)(const string &, const string &)) {    
+    cout << "here" << endl;
+    
     CNode * root1 = _first->GetJSON();
     CNode * root2 = _second->GetJSON();
     
@@ -192,6 +194,8 @@ Result * JsnDiff::Compare(bool (*compareParts)(const string &, const string &)) 
     }
     
     CNode * differNode = new CNode("Compare"); 
+
+    cout << "ok" << endl;
 
     bool r = root1->IsSameAs(root2, differNode);
     return new JsnResult(_first->GetFileName(), _second->GetFileName(), r, differNode);

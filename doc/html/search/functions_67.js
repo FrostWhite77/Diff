@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['getbinary',['GetBinary',['../classFile.html#a730cdfa8aeb93b7716567b70ad40661e',1,'File::GetBinary()'],['../classBinFile.html#af859b4c5a365a0bd9393609fba8cd957',1,'BinFile::GetBinary()'],['../classTxtFile.html#a379d78ee23f6cb8c02ae45cc9287a0ed',1,'TxtFile::GetBinary()'],['../classJsnFile.html#a741de1aad4cca0c0c499e4218821e114',1,'JsnFile::GetBinary()']]],
+  ['getfilename',['GetFileName',['../classFile.html#ad7c7ed9f4337ac9847436186d3486a0b',1,'File']]],
+  ['getfilepath',['GetFilePath',['../classFile.html#a083c1337699d1f33ddec982fba5ec998',1,'File']]],
+  ['getfilesinfolder',['GetFilesInFolder',['../classFolder.html#a6dafac1f6aeedfcea6afb75a27b10839',1,'Folder']]],
+  ['getfilesize',['GetFileSize',['../classFile.html#a87b71db3ff7a3cf6581bda9947cc5c18',1,'File::GetFileSize()'],['../classBinFile.html#a874a908b221269303b704ccfa471ad12',1,'BinFile::GetFileSize()'],['../classTxtFile.html#a7dd7d12bbd3d5ae16fac0cd9aa99b9b6',1,'TxtFile::GetFileSize()'],['../classJsnFile.html#a70fd75c66872aaa9b3ea3e1fb64c32bf',1,'JsnFile::GetFileSize()']]],
+  ['getfullfilename',['GetFullFileName',['../classFile.html#a9589ff5fa7b31c3673fdb6aeb3d9990e',1,'File']]],
+  ['getjson',['GetJSON',['../classFile.html#abb83be38a0517f9f74c0e24159a51851',1,'File::GetJSON()'],['../classBinFile.html#a6189bc6cbe56eba419581cc3b6dd33f9',1,'BinFile::GetJSON()'],['../classTxtFile.html#a2550462cfdfcafc2c4ed3ff1ab704fe1',1,'TxtFile::GetJSON()'],['../classJsnFile.html#a80247939878ea47a813d309c4126a998',1,'JsnFile::GetJSON()']]],
+  ['getkey',['GetKey',['../classCPair.html#a308f9039158bb5fd559f70351adc6bda',1,'CPair']]],
+  ['getorigin',['GetOrigin',['../classCNode.html#a13f94bc4b1e3a750c74db433cbae8a9c',1,'CNode']]],
+  ['getresult',['GetResult',['../classResult.html#acb8c2e18fca7d4497586dede2f8d3796',1,'Result']]],
+  ['gettext',['GetText',['../classFile.html#ae8329c638231229816d62aa31470e42d',1,'File::GetText()'],['../classBinFile.html#adc0eb86ac6f6c3187837aada6bdf145c',1,'BinFile::GetText()'],['../classTxtFile.html#a35a39a445f7ad65579c0e8098b5ff54d',1,'TxtFile::GetText()'],['../classJsnFile.html#a3faf82f78fdfd17d8ab44def8e2babc5',1,'JsnFile::GetText()']]],
+  ['getuniquexbytes',['GetUniqueXBytes',['../classResult.html#a7138845ab9933376427189c0648c6876',1,'Result']]],
+  ['getuniquexlines',['GetUniqueXLines',['../classResult.html#a1096d357f68d134d6390dbda5f16b414',1,'Result']]],
+  ['getuniquexnodes',['GetUniqueXNodes',['../classResult.html#a00b2a0061635cda35dd88a565f0fa654',1,'Result']]],
+  ['getuniqueybytes',['GetUniqueYBytes',['../classResult.html#a2d47237234b9fbd7b90eac78b1ac2687',1,'Result']]],
+  ['getuniqueylines',['GetUniqueYLines',['../classResult.html#abc2b991dc9938bc18e1afda6a1f38149',1,'Result']]],
+  ['getuniqueynodes',['GetUniqueYNodes',['../classResult.html#a482831f8db01a3f54529d8294490dfa5',1,'Result']]],
+  ['getval',['GetVal',['../classCPair.html#a3970a9b9476a8c87a2d9283d70204d7b',1,'CPair']]]
+];
