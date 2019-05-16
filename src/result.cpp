@@ -91,18 +91,22 @@ ostream & BinResult::Print(ostream & os, bool verbose) const {
     if(verbose && !_result) {
         os << endl << "Unique bytes in " << _fileX << ": " << endl;
         for(size_t i = 0; i < _bytesX.size(); i++) {
-            if(i != 0) os << ", ";
-            os << "[" << _bytesX[i].first << "]: " <<bitset<8>(_bytesX[i].second);
+            if(i != 0 && i % 6 != 0) os << ", ";
+            else if(i % 6 == 0) os << endl;
+
+            os << "[" << setfill('0') << setw(2) << _bytesX[i].first << "]: " <<bitset<8>(_bytesX[i].second);
         }
         
         os << (_bytesX.size() != 0 ? "\n" : "") << endl << "Unique bytes in " << _fileY << ": " << endl;
         for(size_t i = 0; i < _bytesY.size(); i++) {
-            if(i != 0) os << ", ";
-            os << "[" << _bytesY[i].first << "]: " << bitset<8>(_bytesY[i].second);
-        }
-    }
+            if(i != 0 && i % 6 != 0) os << ", ";
+            else if(i % 6 == 0) os << endl;
 
-    os << endl;
+            os << "[" << setfill('0') << setw(2) << _bytesY[i].first << "]: " << bitset<8>(_bytesY[i].second);
+        }
+
+        os << (_bytesY.size() != 0 ? "\n" : "");
+    }
     return os;
 }
 
@@ -149,7 +153,7 @@ ostream & TxtResult::Print(ostream & os, bool verbose) const {
             }
         }
     }
-    if(_result) os << endl;
+    //if(!_result) os << endl;
     return os;
 }
 
